@@ -1,28 +1,62 @@
 extends CharacterBody2D
 
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-
+var SPEED = 200.0
+@onready var animate = $AnimatedSprite2D
+@onready var timer = $DozeTimer
+@onready var stamina = $StaminaTimer
+var has_idled = false
+var stamina_full = false
 
 func _physics_process(delta):
-	# Add the gravity.
-	if not is_on_floor():
-		velocity.y += gravity * delta
+	if Input.is_action_pressed("sprint"):
+		SPEED = 200
+	else:
+		SPEED = 100
 
-	# Handle Jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
+	var direction_x = Input.get_axis("move_left", "move_right")
+	var direction_y = Input.get_axis("move_up", "move_down")
+	
+	if velocity.x && velocity.y:
+		velocity.x *= .71
+		velocity.y *= .71
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED/2)
+		velocity.y = move_toward(velocity.y, 0, SPEED/2)
 
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction = Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
+	if direction_x:
+		velocity.x = direction_x * SPEED
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
-
+		
+	if direction_y:
+		velocity.y = direction_y * SPEED
+	else:
+		velocity.y = move_toward(velocity.y, 0, SPEED)
+	
+	if direction_x > 0:
+			animate.flip_h = false
+	elif direction_x < 0:
+		animate.flip_h = true
+		
+	# start timer for player to sit still until doze animation plays
+	if Input.is_action_just_released("move_left") or Input.is_action_just_released("move_right") or Input.is_action_just_released("move_down") or Input.is_action_just_released("move_up"):
+		has_idled = false
+		timer.start()
+	
+	# Play Animations
+	if direction_x == 0 and direction_y == 0:
+		if has_idled:
+			animate.play("doze_off")
+		elif !has_idled:
+			animate.play("idle")
+	else:
+		animate.play("walk")
+			
 	move_and_slide()
+
+func _on_timer_timeout():
+	has_idled = true
+
+func _on_stamina_timer_timeout():
+	stamina_full = false

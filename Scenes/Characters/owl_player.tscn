@@ -46,7 +46,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"doze_off",
-"speed": 5.0
+"speed": 3.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -57,7 +57,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle",
-"speed": 5.0
+"speed": 4.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -80,6 +80,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_61sep"]
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
+y_sort_enabled = true
 script = ExtResource("1_w4l1h")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -88,7 +89,7 @@ position = Vector2(0, -25)
 sprite_frames = SubResource("SpriteFrames_m1jq5")
 animation = &"walk"
 autoplay = "idle"
-frame_progress = 0.718275
+frame_progress = 0.641662
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -10)
@@ -100,3 +101,13 @@ shape = SubResource("CircleShape2D_61sep")
 visible = false
 position = Vector2(0, -10)
 shape = SubResource("CircleShape2D_61sep")
+
+[node name="DozeTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[node name="StaminaTimer" type="Timer" parent="."]
+wait_time = 10.0
+
+[connection signal="timeout" from="DozeTimer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="StaminaTimer" to="." method="_on_stamina_timer_timeout"]
+[connection signal="timeout" from="StaminaTimer" to="." method="_on_timer_timeout"]
