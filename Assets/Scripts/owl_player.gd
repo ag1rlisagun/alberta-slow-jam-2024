@@ -12,11 +12,28 @@ var sitting = false
 
 func owl_player():
 	pass
+	
+func seat_customer(): # check for the customer's state, 
+	# if they are in the initial waiting stage then use this function to 
+	# direct the customer to a specific seat
+	
+	# player walks to customer
+	# player interacts with customer
+	# this changes a boolean to true, and causes customer
+	# to follow player a few steps behind
+	# customer follows player until player interacts with a seat
+		# customer also has a timer at every state,
+		# if customer is following player for too long (35 sec)
+		# customer leaves (need to make sure its never full (will handle difficulty later)
+	# player interacts with area2d of seat (only works if it is empty)
+	# the specific seat is passed to the customer and the customer moves towards it
+	# the customer sits at the chair bc of script -> customer is seated
+	pass
 
 func _physics_process(delta):
 	
 	if Input.is_action_pressed("sprint"):
-		SPEED = 200
+		SPEED = 160
 		sprinting = true
 	else:
 		SPEED = 100
@@ -76,16 +93,17 @@ func _on_stamina_timer_timeout():
 	stamina_full = false
 
 func _on_area_2d_area_entered(area):
-	if area.has_method("seat"):
-		if area.seat() == true:
-			sitting = true
-			print("Sitting = " + str(sitting))
-			# needs a method to move the character to the seat
-			self.position.x = area.position.x
-			self.position.y = area.position.y
-
+	pass
+#	if area.has_method("seat"):
+#		if area.seat() == true:
+#			sitting = true
+#			print("Sitting = " + str(sitting))
+#			# needs a method to move the character to the seat
+#			self.position.x = area.position.x
+#			self.position.y = area.position.y
 
 func _on_area_2d_area_exited(area):
-	if area.has_method("seat"):
-		sitting = false
-		print("Sitting = " + str(sitting))
+	pass
+#	if area.has_method("seat"):
+#		sitting = false
+#		print("Sitting = " + str(sitting))

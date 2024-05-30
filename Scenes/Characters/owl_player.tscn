@@ -106,31 +106,36 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_61sep"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1u3lk"]
 radius = 4.0
+height = 18.0
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 y_sort_enabled = true
+position = Vector2(2.08165e-12, 2.08165e-12)
 script = ExtResource("1_4fjp1")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
 texture_filter = 1
-position = Vector2(0, -25)
+position = Vector2(-2.08165e-12, -2.08165e-12)
 sprite_frames = SubResource("SpriteFrames_m1jq5")
 animation = &"idle"
 autoplay = "idle"
+offset = Vector2(2.08165e-12, -25)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -4)
-shape = SubResource("CircleShape2D_61sep")
+position = Vector2(-2.08165e-12, -4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_1u3lk")
 
 [node name="Area2D" type="Area2D" parent="."]
+position = Vector2(-2.08165e-12, 0)
 
-[node name="CollisionShape2D3" type="CollisionShape2D" parent="Area2D"]
-visible = false
-position = Vector2(0, -7)
-shape = SubResource("CircleShape2D_61sep")
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-7.10543e-15, -4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_1u3lk")
 
 [node name="DozeTimer" type="Timer" parent="."]
 wait_time = 10.0

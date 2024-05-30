@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cysu7ji6dt2o3"]
+[gd_scene load_steps=19 format=3 uid="uid://cysu7ji6dt2o3"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/owl_customer.gd" id="1_o4urg"]
 [ext_resource type="Texture2D" uid="uid://ck4qt50dv6lvs" path="res://Assets/Characters/invertedBird.png" id="2_cdrne"]
@@ -122,30 +122,46 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_2137x"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nkxkj"]
 radius = 4.0
+height = 18.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cb21t"]
+radius = 35.0
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
+position = Vector2(2.08165e-12, 2.08165e-12)
 script = ExtResource("1_o4urg")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 y_sort_enabled = true
 texture_filter = 1
-position = Vector2(0, -25)
 sprite_frames = SubResource("SpriteFrames_3k8pe")
-animation = &"sit"
+animation = &"idle"
 autoplay = "idle"
+offset = Vector2(2.08165e-12, -25)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
-shape = SubResource("CircleShape2D_2137x")
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_nkxkj")
 
 [node name="Area2D" type="Area2D" parent="."]
+position = Vector2(-2.08165e-12, 0)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_nkxkj")
+
+[node name="DetectArea" type="Area2D" parent="."]
 visible = false
-position = Vector2(0, -7)
-shape = SubResource("CircleShape2D_2137x")
+position = Vector2(-2.08165e-12, 0)
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="DetectArea"]
+position = Vector2(0, -10)
+rotation = 1.5708
+shape = SubResource("CircleShape2D_cb21t")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

@@ -2,14 +2,12 @@ extends CharacterBody2D
 
 @onready var animate = $AnimatedSprite2D
 
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+const SPEED = 200
 var sitting = false
 
 func owl_customer():
+	# return state? so that player can check if in initial waiting state
+	# and if true, then seat customer
 	pass
 
 func _physics_process(delta):
@@ -33,7 +31,7 @@ func _physics_process(delta):
 #	else:
 #		velocity.x = move_toward(velocity.x, 0, SPEED)
 #
-	move_and_slide()
+	# move_and_slide()
 
 
 func _on_area_2d_area_entered(area):
