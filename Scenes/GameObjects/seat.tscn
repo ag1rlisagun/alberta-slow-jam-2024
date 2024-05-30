@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6rxokn1wvu8x"]
+
+[ext_resource type="Script" path="res://Assets/Scripts/seat.gd" id="1_vv5rx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uhimn"]
+size = Vector2(9.5, 7.25)
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_vv5rx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_uhimn")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
