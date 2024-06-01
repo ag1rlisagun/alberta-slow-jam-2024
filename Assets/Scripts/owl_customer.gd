@@ -31,19 +31,15 @@ extends CharacterBody2D
 # ADD ENTIRE BILL TO SCORE IF CUSTOMER GETS THEIR BILL
 # CAN ADD A RANGE OF TIPS AS WELL (WITH A HEART, AND TEXT SAYING HOW MUCH TIP WAS GIVEN)
 
+# need polish:
+# little greetings, hearts, idk 
+
+# customers need to spawn (spawn and walk in from outside area)
+# and leave when done (leave to outside area and despawn)
+# player also shouldnt be able to leave area
 
 
-
-
-# rn:
-# customer state changed to being seated 
-# -> customer follows player around
-# if timer runs out before being seated, customer state changesd to done
-# and customer walks out of the restaurant and despawns
-# -> player interacts with seat (empty otherwise impossible)
-# -> specific customer following player gets sent location of seat
-# -> customer moves towards seat, sits down, once seated state changes to drink waiting
-
+# rn: customer needs pathfinding
 enum {
 	SEAT_WAITING,
 	BEING_SEATED,
@@ -73,11 +69,10 @@ var current_state = SEAT_WAITING
 var coffee = "coffee"
 var food_list = ["croissant", "pie", "pastry", "square"]
 var state_list = ["SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
+var chair = null
+var getting_seated = false
 
 func owl_customer():
-# return state? so that player can check if in initial waiting state
-# and if true, then seat customer
-# and in general other states too
 	pass
 
 func return_state():
@@ -87,10 +82,10 @@ func follow_player(leader):
 	# method to follow player
 	current_state = BEING_SEATED
 	
-func get_seated():
-	sitting = true
-	wait_45.stop()
-	current_state = DRINK_WAITING
+func get_seated(seat):
+	chair = seat
+	print(chair)
+	getting_seated = true
 	
 func choose_food(): # need to make a function to show the right food sprite
 	food_list.shuffle()
@@ -99,14 +94,6 @@ func choose_food(): # need to make a function to show the right food sprite
 func order(food_string): 
 # function to order any food, all the processes to show the food sprite, and the timer
 # need to make separate the food/coffee sprites in the sheet
-	pass
-
-func move(delta):
-# temporary until i think about movement
-# position += dir * SPEED * delta
-	pass
-	
-func _ready():
 	pass
 
 func _physics_process(delta): # add animations for when customer is moving etc.
@@ -180,15 +167,19 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 				wait_45.stop()
 				current_state = BEING_SEATED
 				print("45 sec timer STOPPED")
+				player.seat_customer(self)
 	else:
 		customer_text.visible = false
 	
 	test_text.text = state_list[current_state]
 	
-	if sitting:
+	if sitting or current_state != SEAT_WAITING or current_state != BEING_SEATED or current_state != DONE:
 		animate.play("sit")
 	else:
 		animate.play("idle")
+		
+	if getting_seated and !sitting and chair != null:
+		move_and_collide((chair.position - position).normalized())
 	
 #	var direction = Input.get_axis("ui_left", "ui_right")
 #	if direction:
@@ -200,12 +191,14 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 
 func _on_area_2d_area_entered(area):
 	if area.has_method("seat"):
-		if area.seat() == true:
+		if area.return_empty():
 			if current_state == BEING_SEATED:
-				sitting = true
-				print("Sitting = " + str(sitting))
 				self.position.x = area.position.x
 				self.position.y = area.position.y
+				sitting = true
+				getting_seated = false
+				print("Sitting = " + str(sitting))
+				player.clear_customer()
 				wait_45.stop()
 				current_state = DRINK_WAITING
 
@@ -237,10 +230,10 @@ func _on_twenty_idle_timeout():
 	if current_state == DRINK_CONSUMING:
 		idle_20.stop()
 		current_state = FOOD_WAITING
-	print("20 sec timer STOPPED")
+		print("20 sec timer STOPPED")
 
 func _on_thirty_idle_timeout():
 	if current_state == FOOD_CONSUMING:
 		idle_30.stop()
 		current_state = BILL_WAITING
-	print("30 sec timer STOPPED")
+		print("30 sec timer STOPPED")

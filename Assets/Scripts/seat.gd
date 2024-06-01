@@ -6,6 +6,9 @@ extends Area2D
 @export var x_direction: int
 var empty = true
 
+func seat():
+	pass
+
 func return_empty():
 	return empty
 

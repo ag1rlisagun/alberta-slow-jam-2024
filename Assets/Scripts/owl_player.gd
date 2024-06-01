@@ -11,7 +11,9 @@ var has_idled = false
 var stamina_full = false
 var sprinting = false
 var sitting = false
-var seating_customer: CharacterBody2D
+var seating_customer: CharacterBody2D = null 
+var chair = null
+var near_chair = false
 
 # WILL NEED TO IMPLEMENT COFFEE MACHINE AND OVEN WITH TIMERS FOR FOOD
 # NEED CASH REGISTER OR SOMETHING FOR BILLS (AND BILL SPRITE)
@@ -19,22 +21,12 @@ var seating_customer: CharacterBody2D
 func owl_player():
 	pass
 	
-func seat_customer(): # check for the customer's state, 
-	# if they are in the initial waiting stage then use this function to 
-	# direct the customer to a specific seat
+func seat_customer(customer): 
+	seating_customer = customer
+	print(customer)
 	
-	# player walks to customer
-	# player interacts with customer
-	# this changes a boolean to true, and causes customer
-	# to follow player a few steps behind
-	# customer follows player until player interacts with a seat
-		# customer also has a timer at every state,
-		# if customer is following player for too long (35 sec)
-		# customer leaves (need to make sure its never full (will handle difficulty later)
-	# player interacts with area2d of seat (only works if it is empty)
-	# the specific seat is passed to the customer and the customer moves towards it
-	# the customer sits at the chair bc of script -> customer is seated
-	pass
+func clear_customer():
+	seating_customer = null
 
 func _ready():
 	has_idled = false
@@ -94,43 +86,40 @@ func _physics_process(delta):
 		else:
 			animate.play("walk")
 			
+	if near_chair and chair != null:
+		if chair.return_empty():
+			if seating_customer != null:
+				action_prompt.visible = true
+				action_prompt.text = "Seat Customer"
+				if Input.is_action_just_pressed("action"):
+					if seating_customer.return_state() == 1:
+						seating_customer.get_seated(chair)
+						chair = null
+	else:
+		action_prompt.visible = false
 	move_and_slide()
 
 func _on_timer_timeout():
 	has_idled = true
 
-func _on_stamina_timer_timeout():
-	stamina_full = false
-	
-
 func _on_area_2d_area_entered(area): # for seating customers
-	pass
-#	if area.has_method("seat"):
-#		if area.seat() == true:
-#			sitting = true
-#			print("Sitting = " + str(sitting))
-#			# needs a method to move the character to the seat
-#			self.position.x = area.position.x
-#			self.position.y = area.position.y
+	if area.has_method("seat"):
+		chair = area
+		near_chair = true
+		# print(chair)
+		# do something to pass the chair location to customer 
+		# do something with chair.position
+		# interact with chair and send signal to specific customer??
 
 func _on_area_2d_area_exited(area): 
 	if area.has_method("seat"):
-		var chair = area
-		if !chair.return_empty():
-			# do something to pass the chair location to customer 
-			# do something with chair.position
-			# interact with chair and send signal to specific customer??
-			pass
-
+		chair = null
+		near_chair = false
 
 func _on_area_2d_body_entered(body):
-	if body.has_method("owl_customer"):
-		var customer = body
-		var state = customer.return_state()
-#		if state == 0:
-#			action_prompt.visible = true
-#			action_prompt.text = "Interact"
+	# gonna use the detection methods on objects (customer, seats, etc.)
+	# rather than the ones on the player unless i need to
+	pass
 
 func _on_area_2d_body_exited(body):
-	if body.has_method("owl_customer"):
-		action_prompt.visible = false
+	pass
