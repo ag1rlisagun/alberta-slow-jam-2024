@@ -2,10 +2,11 @@ extends Area2D
 
 # 1 if sitter should face right
 # -1 if sitter should face left
+
 @export var x_direction: int
 var empty = true
 
-func seat():
+func return_empty():
 	return empty
 
 # Called when the node enters the scene tree for the first time.
@@ -17,11 +18,11 @@ func _process(delta):
 	pass
 
 func _on_body_entered(body):
-	if body.has_method("owl_customer") or body.has_method("owl_player"):
+	if body.has_method("owl_customer"):
 		empty = false
 		print("Empty = " + str(empty))
 
 func _on_body_exited(body):
-	if body.has_method("owl_customer") or body.has_method("owl_player"):
+	if body.has_method("owl_customer"):
 		empty = true
 		print("Empty = " + str(empty))

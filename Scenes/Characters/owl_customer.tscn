@@ -1,7 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://cysu7ji6dt2o3"]
+[gd_scene load_steps=21 format=3 uid="uid://cysu7ji6dt2o3"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/owl_customer.gd" id="1_o4urg"]
 [ext_resource type="Texture2D" uid="uid://ck4qt50dv6lvs" path="res://Assets/Characters/invertedBird.png" id="2_cdrne"]
+[ext_resource type="FontFile" uid="uid://cdh2ioflai21l" path="res://Assets/Fonts/dogica/OTF/dogica.otf" id="3_6dd7j"]
+[ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="4_104g0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_40rm6"]
 atlas = ExtResource("2_cdrne")
@@ -127,7 +129,7 @@ radius = 4.0
 height = 18.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cb21t"]
-radius = 35.0
+radius = 31.0
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 position = Vector2(2.08165e-12, 2.08165e-12)
@@ -155,7 +157,6 @@ rotation = 1.5708
 shape = SubResource("CapsuleShape2D_nkxkj")
 
 [node name="DetectArea" type="Area2D" parent="."]
-visible = false
 position = Vector2(-2.08165e-12, 0)
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="DetectArea"]
@@ -163,5 +164,58 @@ position = Vector2(0, -10)
 rotation = 1.5708
 shape = SubResource("CircleShape2D_cb21t")
 
+[node name="StateText" type="Label" parent="."]
+texture_filter = 1
+offset_left = -8.0
+offset_top = -32.0
+offset_right = 72.0
+offset_bottom = -1.0
+scale = Vector2(0.2, 0.2)
+theme_override_fonts/font = ExtResource("3_6dd7j")
+theme_override_font_sizes/font_size = 16
+text = "State"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CustomerText" type="Label" parent="."]
+visible = false
+texture_filter = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -35.0
+offset_right = 336.0
+offset_bottom = -18.0
+grow_vertical = 0
+scale = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_104g0")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FourFiveWait" type="Timer" parent="."]
+wait_time = 45.0
+one_shot = true
+
+[node name="SixtyWait" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+
+[node name="TwentyIdle" type="Timer" parent="."]
+wait_time = 25.0
+one_shot = true
+
+[node name="ThirtyIdle" type="Timer" parent="."]
+wait_time = 30.0
+one_shot = true
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
+[connection signal="body_entered" from="DetectArea" to="." method="_on_detect_area_body_entered"]
+[connection signal="body_exited" from="DetectArea" to="." method="_on_detect_area_body_exited"]
+[connection signal="timeout" from="FourFiveWait" to="." method="_on_four_five_wait_timeout"]
+[connection signal="timeout" from="SixtyWait" to="." method="_on_sixty_wait_timeout"]
+[connection signal="timeout" from="TwentyIdle" to="." method="_on_twenty_idle_timeout"]
+[connection signal="timeout" from="ThirtyIdle" to="." method="_on_thirty_idle_timeout"]

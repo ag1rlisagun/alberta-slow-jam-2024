@@ -1,14 +1,20 @@
 extends CharacterBody2D
 
-
-var SPEED = 200.0
+@onready var player_body = $"."
 @onready var animate = $AnimatedSprite2D
 @onready var timer = $DozeTimer
 @onready var stamina = $StaminaTimer
+@onready var action_prompt = $ActionPrompt
+
+var SPEED = 200
 var has_idled = false
 var stamina_full = false
 var sprinting = false
 var sitting = false
+var seating_customer: CharacterBody2D
+
+# WILL NEED TO IMPLEMENT COFFEE MACHINE AND OVEN WITH TIMERS FOR FOOD
+# NEED CASH REGISTER OR SOMETHING FOR BILLS (AND BILL SPRITE)
 
 func owl_player():
 	pass
@@ -29,6 +35,10 @@ func seat_customer(): # check for the customer's state,
 	# the specific seat is passed to the customer and the customer moves towards it
 	# the customer sits at the chair bc of script -> customer is seated
 	pass
+
+func _ready():
+	has_idled = false
+	timer.start()
 
 func _physics_process(delta):
 	
@@ -91,8 +101,9 @@ func _on_timer_timeout():
 
 func _on_stamina_timer_timeout():
 	stamina_full = false
+	
 
-func _on_area_2d_area_entered(area):
+func _on_area_2d_area_entered(area): # for seating customers
 	pass
 #	if area.has_method("seat"):
 #		if area.seat() == true:
@@ -102,8 +113,24 @@ func _on_area_2d_area_entered(area):
 #			self.position.x = area.position.x
 #			self.position.y = area.position.y
 
-func _on_area_2d_area_exited(area):
-	pass
-#	if area.has_method("seat"):
-#		sitting = false
-#		print("Sitting = " + str(sitting))
+func _on_area_2d_area_exited(area): 
+	if area.has_method("seat"):
+		var chair = area
+		if !chair.return_empty():
+			# do something to pass the chair location to customer 
+			# do something with chair.position
+			# interact with chair and send signal to specific customer??
+			pass
+
+
+func _on_area_2d_body_entered(body):
+	if body.has_method("owl_customer"):
+		var customer = body
+		var state = customer.return_state()
+#		if state == 0:
+#			action_prompt.visible = true
+#			action_prompt.text = "Interact"
+
+func _on_area_2d_body_exited(body):
+	if body.has_method("owl_customer"):
+		action_prompt.visible = false

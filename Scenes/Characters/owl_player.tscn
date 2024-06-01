@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://cr4sivgv6bj2j"]
+[gd_scene load_steps=16 format=3 uid="uid://cr4sivgv6bj2j"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/owl_player.gd" id="1_4fjp1"]
 [ext_resource type="Texture2D" uid="uid://cwpnfi438tfqb" path="res://Assets/Characters/simpleBird-Sheet.png" id="1_wbo4f"]
+[ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="3_agiaq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_a2pfr"]
 atlas = ExtResource("1_wbo4f")
@@ -108,7 +109,9 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1u3lk"]
 radius = 4.0
-height = 18.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u36om"]
+radius = 24.331
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
 y_sort_enabled = true
@@ -133,18 +136,38 @@ shape = SubResource("CapsuleShape2D_1u3lk")
 position = Vector2(-2.08165e-12, 0)
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(-7.10543e-15, -4)
+position = Vector2(7.10543e-15, -10)
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_1u3lk")
+shape = SubResource("CircleShape2D_u36om")
 
 [node name="DozeTimer" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 30.0
 
 [node name="StaminaTimer" type="Timer" parent="."]
 wait_time = 10.0
 
+[node name="ActionPrompt" type="Label" parent="."]
+visible = false
+texture_filter = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = -35.0
+offset_right = 336.0
+offset_bottom = -18.0
+grow_vertical = 0
+scale = Vector2(0.5, 0.5)
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3_agiaq")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
 [connection signal="timeout" from="DozeTimer" to="." method="_on_timer_timeout"]
-[connection signal="timeout" from="StaminaTimer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="StaminaTimer" to="." method="_on_stamina_timer_timeout"]
+[connection signal="timeout" from="StaminaTimer" to="." method="_on_timer_timeout"]
