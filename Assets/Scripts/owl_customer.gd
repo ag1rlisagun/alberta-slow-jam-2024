@@ -39,7 +39,7 @@ extends CharacterBody2D
 # player also shouldnt be able to leave area
 
 
-# rn: customer needs pathfinding
+# rn: customer needs pathfinding`
 enum {
 	SEAT_WAITING,
 	BEING_SEATED,
@@ -60,8 +60,11 @@ enum {
 @onready var test_text = $StateText
 @onready var customer_text = $CustomerText
 @onready var player = $"../Player"
+@onready var exit = $"../Areas/Exit"
+@onready var nav = get_node("NavigationAgent2D")
+@onready var navReg = $"../../NavigationRegion2D"
 
-const SPEED = 200
+const SPEED = 150
 
 var player_near = false
 var sitting = false
@@ -71,12 +74,42 @@ var food_list = ["croissant", "pie", "pastry", "square"]
 var state_list = ["SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
 var chair = null
 var getting_seated = false
+var path = []
+var map
 
 func owl_customer():
 	pass
 
 func return_state():
 	return current_state
+	
+func _ready():
+	call_deferred("setup_navserver")
+	
+func _unhandled_input(event):
+	if not event.is_action_pressed("action"):
+		return
+	_update_navigation_path(self.position, player.position)
+	
+func setup_navserver():
+	# create a new navigation map
+	map = NavigationServer2D.map_create()
+	NavigationServer2D.map_set_active(map, true)
+	
+	# create a new navigation region and add it to the map
+	var region = NavigationServer2D.region_create()
+	NavigationServer2D.region_set_transform(region, Transform2D())
+	NavigationServer2D.region_set_map(region, map)
+	
+	# sets navigation mesh for the region
+	var navigation_poly = NavigationMesh.new()
+	navigation_poly = $"../../NavigationRegion2D".navigation_polygon
+	NavigationServer2D.region_set_navigation_polygon(region, navigation_poly)
+	
+func _update_navigation_path(start_pos, end_pos):
+	path = NavigationServer2D.map_get_path(map, start_pos, end_pos, true)
+	path.remove_at(0)
+	set_process(true)
 	
 func follow_player(leader):
 	# method to follow player
@@ -95,8 +128,8 @@ func order(food_string):
 # function to order any food, all the processes to show the food sprite, and the timer
 # need to make separate the food/coffee sprites in the sheet
 	pass
-
-func _physics_process(delta): # add animations for when customer is moving etc.
+	
+func _process(delta):
 	match current_state:
 	# straight to done if customer receives wrong order or player takes too long
 		SEAT_WAITING:
@@ -117,7 +150,8 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 #			pass
 		SITTING:
 			# call function to go to location of chair and sit (existing function)
-			pass
+			if idle_20.is_stopped():
+				idle_20.start()
 		DRINK_WAITING:
 		# (coffee) displays desired drink and waits at most 45 secs
 		# need a function for a new timer, and to trigger DONE state if finished 
@@ -139,7 +173,7 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 			order(choose_food())
 			if wait_60.is_stopped():
 				wait_60.start()
-				print("6food waiting, 0 sec timer START")
+				print("food waiting, 0 sec timer START")
 		FOOD_CONSUMING:
 		# 30secs eating
 			# wait_60.is_stopped()
@@ -157,6 +191,7 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 		# as soon as bill is brought, customer pays and walks out of cafe
 		# player gets points for the bill and tips
 			sitting = false
+			move_and_collide((exit.position - position).normalized() * SPEED)
 
 	if player_near and current_state != DONE:
 		if current_state == SEAT_WAITING:
@@ -168,8 +203,8 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 				current_state = BEING_SEATED
 				print("45 sec timer STOPPED")
 				player.seat_customer(self)
-	else:
-		customer_text.visible = false
+		else:
+			customer_text.visible = false
 	
 	test_text.text = state_list[current_state]
 	
@@ -178,34 +213,146 @@ func _physics_process(delta): # add animations for when customer is moving etc.
 	else:
 		animate.play("idle")
 		
+	# add animations for walking and flip h of sprite when walking
+	if current_state == BEING_SEATED and !getting_seated and !sitting and chair == null:
+		var walk_distance = 100 * delta
+		move_along_path(walk_distance)
+#		if position.distance_to(player.position) <= 10:
+#			position = position
+#		if position.distance_to(player.position) > 10:
+#			move_and_collide((player.position - position).normalized() * SPEED)
+		
 	if getting_seated and !sitting and chair != null:
-		move_and_collide((chair.position - position).normalized())
-	
-#	var direction = Input.get_axis("ui_left", "ui_right")
-#	if direction:
-#		velocity.x = direction * SPEED
-#	else:
-#		velocity.x = move_toward(velocity.x, 0, SPEED)
+		move_and_collide((chair.position - position).normalized() * SPEED)
+		
+# modify locations for player, chair and exit during corresponding states
+func move_along_path(distance):
+	var last_point = self.position
+	while path.size():
+		var distance_between_points = last_point.distance_to(path[0])
+		if distance <= distance_between_points:
+			self.position = last_point.lerp(path[0], distance / distance_between_points)
+			return
+			
+		distance -= distance_between_points
+		last_point = path[0]
+		path.remove_at(0)
+	self.position = last_point
+	set_process(false)
+
+#func _physics_process(delta): # add animations for when customer is moving etc.
+#	match current_state:
+#	# straight to done if customer receives wrong order or player takes too long
+#		SEAT_WAITING:
+#		# waiting at most for ~45 secs
+#		# customer has to be tagged to start following player
+#			if wait_45.is_stopped():
+#				wait_45.start()
+#				print("seat waiting, 45 sec timer START")
+#			# pass
+#		BEING_SEATED:
+#		# following player for at most 45 secs
+#		# follow player until player interacts with a seat node, 
+#		# then customer sits at the seat (if empty)
+#		# once seated, thinking b/n 10-30 secs
+#			if wait_45.is_stopped():
+#				wait_45.start()
+#				print("being seated, 45 sec timer START")
+##			pass
+#		SITTING:
+#			# call function to go to location of chair and sit (existing function)
+#			if idle_20.is_stopped():
+#				idle_20.start()
+#		DRINK_WAITING:
+#		# (coffee) displays desired drink and waits at most 45 secs
+#		# need a function for a new timer, and to trigger DONE state if finished 
+#			order(coffee)
+#			if wait_45.is_stopped():
+#				wait_45.start()
+#				print("drink waiting, 45 sec timer START")
+#		DRINK_CONSUMING:
+#		# 10-20 secs drinking
+#			if idle_20.is_stopped():
+#				idle_20.start()
+#				print("drink consuming, 0 sec timer START")
+##			pass
+#		FOOD_WAITING:
+#		# drink finished 
+#		# displays desired food and waits 1min at most
+#		# need a function for a new timer, and to trigger DONE state if finished 
+#		# also to take away points for unpaid coffee
+#			order(choose_food())
+#			if wait_60.is_stopped():
+#				wait_60.start()
+#				print("food waiting, 0 sec timer START")
+#		FOOD_CONSUMING:
+#		# 30secs eating
+#			# wait_60.is_stopped()
+#			if idle_30.is_stopped():
+#				idle_30.start()
+#				print("food consuming, 30 sec timer START")
+##			pass
+#		BILL_WAITING:
+#		# food disappears and customer will wait 45 secs at most
+#			if wait_45.is_stopped():
+#				wait_45.start()
+#				print("bill waiting, 45 sec timer START")
+##			pass
+#		DONE:
+#		# as soon as bill is brought, customer pays and walks out of cafe
+#		# player gets points for the bill and tips
+#			sitting = false
+#			move_and_collide((exit.position - position).normalized() * SPEED)
 #
-	# move_and_slide()
+#	if player_near and current_state != DONE:
+#		if current_state == SEAT_WAITING:
+#			customer_text.visible = true
+#			customer_text.text = "Interact"
+#			if Input.is_action_just_pressed("action"):
+#				follow_player(player)
+#				wait_45.stop()
+#				current_state = BEING_SEATED
+#				print("45 sec timer STOPPED")
+#				player.seat_customer(self)
+#		else:
+#			customer_text.visible = false
+#
+#	test_text.text = state_list[current_state]
+#
+#	if sitting or current_state != SEAT_WAITING or current_state != BEING_SEATED or current_state != DONE:
+#		animate.play("sit")
+#	else:
+#		animate.play("idle")
+#
+#	# add animations for walking and flip h of sprite when walking
+#	if current_state == BEING_SEATED and !getting_seated and !sitting and chair == null:
+#		if position.distance_to(player.position) <= 10:
+#			position = position
+#		if position.distance_to(player.position) > 10:
+#			move_and_collide((player.position - position).normalized() * SPEED)
+#
+#	if getting_seated and !sitting and chair != null:
+#		move_and_collide((chair.position - position).normalized() * SPEED)
 
 func _on_area_2d_area_entered(area):
-	if area.has_method("seat"):
-		if area.return_empty():
-			if current_state == BEING_SEATED:
-				self.position.x = area.position.x
-				self.position.y = area.position.y
-				sitting = true
-				getting_seated = false
-				print("Sitting = " + str(sitting))
-				player.clear_customer()
-				wait_45.stop()
-				current_state = DRINK_WAITING
+	if current_state == BEING_SEATED and chair != null:
+		if area.has_method("seat"):
+			if area.return_empty():
+				if current_state == BEING_SEATED:
+					position.x = area.position.x
+					position.y = area.position.y
+					sitting = true
+					getting_seated = false
+					print("Sitting = " + str(sitting))
+					player.clear_customer()
+					wait_45.stop()
+					current_state = SITTING
 
 func _on_area_2d_area_exited(area):
-	if area.has_method("seat"):
-		sitting = false
-		print("Sitting = " + str(sitting))
+	if current_state == DONE:
+		if area.has_method("seat"):
+			sitting = false
+			print("Sitting = " + str(sitting))
 
 func _on_detect_area_body_entered(body):
 	if body.has_method("owl_player"):
@@ -231,6 +378,9 @@ func _on_twenty_idle_timeout():
 		idle_20.stop()
 		current_state = FOOD_WAITING
 		print("20 sec timer STOPPED")
+	if current_state == SITTING:
+		idle_20.stop()
+		current_state = DRINK_WAITING
 
 func _on_thirty_idle_timeout():
 	if current_state == FOOD_CONSUMING:

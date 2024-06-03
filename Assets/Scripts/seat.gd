@@ -22,8 +22,9 @@ func _process(delta):
 
 func _on_body_entered(body):
 	if body.has_method("owl_customer"):
-		empty = false
-		print("Empty = " + str(empty))
+		if body.return_state() != 8:
+			empty = false
+			print("Empty = " + str(empty))
 
 func _on_body_exited(body):
 	if body.has_method("owl_customer"):

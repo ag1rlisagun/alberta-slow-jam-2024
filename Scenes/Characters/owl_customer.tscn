@@ -211,6 +211,9 @@ one_shot = true
 wait_time = 30.0
 one_shot = true
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+avoidance_enabled = true
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
 [connection signal="body_entered" from="DetectArea" to="." method="_on_detect_area_body_entered"]

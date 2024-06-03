@@ -1,5 +1,6 @@
-[gd_scene load_steps=15 format=3 uid="uid://0c0ulhk6cgnb"]
+[gd_scene load_steps=17 format=3 uid="uid://0c0ulhk6cgnb"]
 
+[ext_resource type="Script" path="res://Assets/Scripts/game.gd" id="1_8trmo"]
 [ext_resource type="Texture2D" uid="uid://da8w5skeh0wdw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-tilemap.png" id="1_iiiuj"]
 [ext_resource type="Texture2D" uid="uid://f2grvism4a2u" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food.png" id="2_pyubd"]
 [ext_resource type="Texture2D" uid="uid://b8ssj24fromfm" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-furnitures.png" id="3_elbcx"]
@@ -497,8 +498,14 @@ sources/3 = SubResource("TileSetAtlasSource_nx3x5")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cy5xl"]
 size = Vector2(64, 41)
 
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_g8b5h"]
+vertices = PackedVector2Array(223, 0, 224, 160, 223, 16, 223, 45, 223, 96, 223, 125, 207, 96, 77, 92, 207, 45, 207, 125, -160, 160, -160, 143, 141, 44, 207, 16, 112, 44, 77, 66, 141, 18, 49, 92, -175, 143, -176, 65, -1, 63, 48, 66, -2, 0, 112, 18)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2), PackedInt32Array(3, 2, 1), PackedInt32Array(3, 1, 4), PackedInt32Array(5, 4, 1), PackedInt32Array(3, 4, 6, 7, 8), PackedInt32Array(9, 5, 1, 10, 11), PackedInt32Array(8, 7, 12, 13), PackedInt32Array(14, 12, 7, 15), PackedInt32Array(13, 12, 16), PackedInt32Array(17, 11, 18, 19, 20, 21), PackedInt32Array(22, 0, 2, 13), PackedInt32Array(22, 13, 16, 23), PackedInt32Array(20, 22, 23, 14, 15, 21), PackedInt32Array(7, 6, 9, 11, 17), PackedInt32Array(17, 21, 21)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-2, 0, 223, 0, 224, 160, -160, 160, -160, 143, -175, 143, -176, 65, -2, 63), PackedVector2Array(48, 66, 77, 66, 77, 92, 49, 92, 48, 66), PackedVector2Array(112, 18, 141, 18, 141, 44, 112, 44), PackedVector2Array(223, 16, 207, 16, 207, 45, 223, 45), PackedVector2Array(223, 96, 207, 96, 207, 125, 223, 125), PackedVector2Array(143, 160, 143, 144, 175, 144, 175, 160), PackedVector2Array(47, 160, 47, 144, 79, 144, 79, 160), PackedVector2Array(-49, 160, -49, 144, -17, 144, -17, 160)])
+
 [node name="Node2D" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_8trmo")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_i6jhd")
@@ -534,10 +541,15 @@ layer_2/tile_data = PackedInt32Array(524298, 393218, 5, 458754, 524290, 4, 45875
 y_sort_enabled = true
 
 [node name="CustomerSpawn" type="Area2D" parent="Node2D/Areas"]
-position = Vector2(48, 295)
+position = Vector2(48, 284)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/CustomerSpawn"]
-position = Vector2(0, -10.5)
+shape = SubResource("RectangleShape2D_cy5xl")
+
+[node name="Exit" type="Area2D" parent="Node2D/Areas"]
+position = Vector2(47, 372)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/Exit"]
 shape = SubResource("RectangleShape2D_cy5xl")
 
 [node name="Chair" parent="Node2D/Areas" instance=ExtResource("7_ynm28")]
@@ -627,4 +639,11 @@ zoom = Vector2(4.8, 4.8)
 position = Vector2(101, 178)
 
 [node name="Customer" parent="Node2D" instance=ExtResource("8_pw52y")]
-position = Vector2(36, 295)
+position = Vector2(36, 288)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(177, 144)
+navigation_polygon = SubResource("NavigationPolygon_g8b5h")
+
+[connection signal="body_entered" from="Node2D/Areas/Exit" to="." method="_on_exit_body_entered"]
+[connection signal="body_exited" from="Node2D/Areas/Exit" to="." method="_on_exit_body_exited"]
