@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://0c0ulhk6cgnb"]
+[gd_scene load_steps=18 format=3 uid="uid://0c0ulhk6cgnb"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/game.gd" id="1_8trmo"]
 [ext_resource type="Texture2D" uid="uid://da8w5skeh0wdw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-tilemap.png" id="1_iiiuj"]
@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://cr4sivgv6bj2j" path="res://Scenes/Characters/owl_player.tscn" id="4_io7fu"]
 [ext_resource type="AudioStream" uid="uid://bjt2urdxgxfsf" path="res://Assets/Music/cafe_bass_jazz.mp3" id="6_i6jhd"]
 [ext_resource type="PackedScene" uid="uid://b6rxokn1wvu8x" path="res://Scenes/GameObjects/seat.tscn" id="7_ynm28"]
-[ext_resource type="PackedScene" uid="uid://cysu7ji6dt2o3" path="res://Scenes/Characters/owl_customer.tscn" id="8_pw52y"]
+[ext_resource type="Script" path="res://Assets/Scripts/CustomerSpawn.gd" id="9_pqy60"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7la44"]
 texture = ExtResource("1_iiiuj")
@@ -495,8 +495,11 @@ sources/1 = SubResource("TileSetAtlasSource_p5atq")
 sources/2 = SubResource("TileSetAtlasSource_j1tsk")
 sources/3 = SubResource("TileSetAtlasSource_nx3x5")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_huqwq"]
+size = Vector2(68.5, 10)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cy5xl"]
-size = Vector2(64, 41)
+size = Vector2(64.5, 41)
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_dpt4c"]
 vertices = PackedVector2Array(224, 45, 224, 96, 208, 96, 80, 93, 208, 45, 144, 45, 208, 16, 112, 45, 80, 64, -97, 249, -161, 249, -160, 160, -96, 160, -1, 0, 224, 0, 224, 16, 144, 16, 112, 16, -1, 64, 48, 64, 208, 125, 224, 125, 224, 160, 176, 160, 176, 144, 144, 144, 144, 160, 80, 160, 80, 144, 48, 144, 48, 160, -16, 160, -16, 144, -48, 144, -48, 160, -176, 160, -176, 65, 48, 93)
@@ -540,14 +543,14 @@ layer_2/tile_data = PackedInt32Array(524298, 393218, 5, 458754, 524290, 4, 45875
 [node name="Areas" type="Node2D" parent="Node2D"]
 y_sort_enabled = true
 
-[node name="CustomerSpawn" type="Area2D" parent="Node2D/Areas"]
-position = Vector2(48, 284)
+[node name="Entrance" type="Area2D" parent="Node2D/Areas"]
+position = Vector2(48, 270)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/CustomerSpawn"]
-shape = SubResource("RectangleShape2D_cy5xl")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/Entrance"]
+shape = SubResource("RectangleShape2D_huqwq")
 
 [node name="Exit" type="Area2D" parent="Node2D/Areas"]
-position = Vector2(47, 372)
+position = Vector2(48, 372)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/Exit"]
 shape = SubResource("RectangleShape2D_cy5xl")
@@ -638,12 +641,20 @@ zoom = Vector2(4.8, 4.8)
 [node name="Player" parent="Node2D" instance=ExtResource("4_io7fu")]
 position = Vector2(101, 178)
 
-[node name="Customer" parent="Node2D" instance=ExtResource("8_pw52y")]
-position = Vector2(36, 288)
+[node name="CustomerSpawn" type="Area2D" parent="Node2D"]
+position = Vector2(48, 328)
+script = ExtResource("9_pqy60")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/CustomerSpawn"]
+shape = SubResource("RectangleShape2D_cy5xl")
+
+[node name="SpawnTimer" type="Timer" parent="Node2D/CustomerSpawn"]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+visible = false
 position = Vector2(176, 144)
 navigation_polygon = SubResource("NavigationPolygon_dpt4c")
 
 [connection signal="body_entered" from="Node2D/Areas/Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_exited" from="Node2D/Areas/Exit" to="." method="_on_exit_body_exited"]
+[connection signal="timeout" from="Node2D/CustomerSpawn/SpawnTimer" to="." method="_on_spawn_timer_timeout"]

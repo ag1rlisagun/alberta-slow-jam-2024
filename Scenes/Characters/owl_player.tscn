@@ -114,7 +114,7 @@ height = 20.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_u36om"]
 radius = 24.331
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 y_sort_enabled = true
 position = Vector2(2.08165e-12, 2.08165e-12)
 script = ExtResource("1_4fjp1")

@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://cysu7ji6dt2o3"]
+[gd_scene load_steps=22 format=3 uid="uid://cysu7ji6dt2o3"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/owl_customer.gd" id="1_o4urg"]
 [ext_resource type="Texture2D" uid="uid://ck4qt50dv6lvs" path="res://Assets/Characters/invertedBird.png" id="2_cdrne"]
 [ext_resource type="FontFile" uid="uid://cdh2ioflai21l" path="res://Assets/Fonts/dogica/OTF/dogica.otf" id="3_6dd7j"]
+[ext_resource type="Texture2D" uid="uid://cwpnfi438tfqb" path="res://Assets/Characters/simpleBird-Sheet.png" id="3_47i5c"]
 [ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="4_104g0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_40rm6"]
@@ -13,16 +14,16 @@ region = Rect2(0, 300, 50, 50)
 atlas = ExtResource("2_cdrne")
 region = Rect2(50, 300, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fihax"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2dnl"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(0, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_gi54a"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8ncl"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(50, 0, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0uemv"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_qqai8"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(0, 100, 50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_b58cu"]
@@ -41,20 +42,20 @@ region = Rect2(100, 50, 50, 50)
 atlas = ExtResource("2_cdrne")
 region = Rect2(150, 50, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_qfyap"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrbob"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(0, 50, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_8djsd"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_ggrwh"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(50, 50, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_vomnd"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_2bqav"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(100, 50, 50, 50)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_if0ba"]
-atlas = ExtResource("2_cdrne")
+[sub_resource type="AtlasTexture" id="AtlasTexture_vu14x"]
+atlas = ExtResource("3_47i5c")
 region = Rect2(150, 50, 50, 50)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_3k8pe"]
@@ -72,10 +73,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fihax")
+"texture": SubResource("AtlasTexture_i2dnl")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_gi54a")
+"texture": SubResource("AtlasTexture_v8ncl")
 }],
 "loop": true,
 "name": &"idle",
@@ -83,7 +84,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0uemv")
+"texture": SubResource("AtlasTexture_qqai8")
 }],
 "loop": true,
 "name": &"sit",
@@ -108,16 +109,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_qfyap")
+"texture": SubResource("AtlasTexture_nrbob")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8djsd")
+"texture": SubResource("AtlasTexture_ggrwh")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_vomnd")
+"texture": SubResource("AtlasTexture_2bqav")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_if0ba")
+"texture": SubResource("AtlasTexture_vu14x")
 }],
 "loop": true,
 "name": &"walk",
@@ -131,7 +132,7 @@ height = 18.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_cb21t"]
 radius = 31.0
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Customer" type="CharacterBody2D"]
 position = Vector2(2.08165e-12, 2.08165e-12)
 motion_mode = 1
 wall_min_slide_angle = 0.0
@@ -141,7 +142,7 @@ script = ExtResource("1_o4urg")
 y_sort_enabled = true
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_3k8pe")
-animation = &"walk"
+animation = &"idle"
 autoplay = "idle"
 offset = Vector2(2.08165e-12, -25)
 

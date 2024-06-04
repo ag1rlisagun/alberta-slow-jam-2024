@@ -21,6 +21,9 @@ var near_chair = false
 func owl_player():
 	pass
 	
+func has_customer():
+	return seating_customer
+	
 func seat_customer(customer): 
 	seating_customer = customer
 	print(customer)
@@ -92,7 +95,7 @@ func _physics_process(delta):
 				action_prompt.visible = true
 				action_prompt.text = "Seat Customer"
 				if Input.is_action_just_pressed("action"):
-					if seating_customer.return_state() == 1:
+					if seating_customer.return_state() == 2:
 						seating_customer.get_seated(chair)
 						chair = null
 	else:
