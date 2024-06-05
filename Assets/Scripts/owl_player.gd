@@ -4,7 +4,7 @@ extends CharacterBody2D
 @onready var animate = $AnimatedSprite2D
 @onready var timer = $DozeTimer
 @onready var stamina = $StaminaTimer
-@onready var action_prompt = $ActionPrompt
+@onready var action_prompt = $ActionPrompt2
 
 var SPEED = 200
 var has_idled = false

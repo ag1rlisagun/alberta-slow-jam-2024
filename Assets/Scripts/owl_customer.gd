@@ -31,11 +31,11 @@ extends CharacterBody2D
 # need polish:
 # little greetings, hearts, idk 
 
-# customers need to spawn (spawn and walk in from outside area)
 # player also shouldnt be able to leave area
 
-# can choose random values for self modulation when spawning customers 
-# (change color of sprite in game)
+# NEED GAME STATES!!!!!!!!!!!!!!!!!!!!!!! BRUH GAME NEEDS TO END
+# REMAKE NAVREGION LATER TO HAVE MORE SQUARES SO NAVIGATION ISNT JANKY
+
 
 enum {
 	ENTER,
@@ -100,7 +100,7 @@ func order(food_string):
 	pass
 	
 func _ready():
-	animate.set_modulate(Color(rng.randf_range(0.0, 1.0), rng.randf_range(0.0, 1.0), rng.randf_range(0.0, 1.0), 1))
+	animate.set_modulate(Color(rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), 1))
 	
 func _process(delta):
 	match current_state:
