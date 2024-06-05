@@ -44,7 +44,7 @@ func spawn():
 	customer.position = spawn_area.position
 	print(str(customer) + "@ " + str(customer.position))
 	customer.entrance = $Node2D/Areas/Entrance
-	customer.player = $Player
+	customer.player = $Node2D/Player
 	customer.exit = $Node2D/Areas/Exit
 	spawn_timer.start()
 
