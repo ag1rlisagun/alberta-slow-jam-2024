@@ -55,6 +55,8 @@ enum {
 @export var entrance: Area2D
 
 @onready var rng = RandomNumberGenerator.new()
+@onready var current_state = ENTER
+
 @onready var animate = $AnimatedSprite2D
 @onready var wait_45 = $FourFiveWait
 @onready var wait_60 = $SixtyWait
@@ -63,7 +65,6 @@ enum {
 @onready var test_text = $StateText
 @onready var customer_text = $CustomerText
 @onready var nav = $NavigationAgent2D
-@onready var current_state = ENTER
 @onready var pie = $Pie
 @onready var square = $Square
 @onready var croissant = $Croissant
@@ -71,6 +72,14 @@ enum {
 @onready var pastry = $Pastry
 @onready var coffee = $Coffee
 @onready var cash = $Cash
+@onready var order_bg = $OrderBG
+@onready var order_pie = $OrderBG/OrderPie
+@onready var order_square = $OrderBG/OrderSquare
+@onready var order_croissant = $OrderBG/OrderCroissant
+@onready var order_tiramisu = $OrderBG/OrderTiramisu
+@onready var order_pastry = $OrderBG/OrderPastry
+@onready var order_coffee = $OrderBG/OrderCoffee
+@onready var order_bill = $OrderBG/OrderBill
 
 const SPEED = 75
 
