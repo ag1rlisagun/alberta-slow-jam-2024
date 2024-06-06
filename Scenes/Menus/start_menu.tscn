@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://trlps5kwfcke"]
+[gd_scene load_steps=23 format=3 uid="uid://trlps5kwfcke"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/start_menu.gd" id="1_aqjxl"]
 [ext_resource type="AudioStream" uid="uid://bjt2urdxgxfsf" path="res://Assets/Music/cafe_bass_jazz.mp3" id="1_himei"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://f2grvism4a2u" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food.png" id="3_7nh3m"]
 [ext_resource type="Texture2D" uid="uid://cwpnfi438tfqb" path="res://Assets/Characters/simpleBird-Sheet.png" id="4_1ln6d"]
 [ext_resource type="FontFile" uid="uid://bw1bscnrnjag2" path="res://Assets/Fonts/dogica/TTF/dogicabold.ttf" id="6_dbh23"]
+[ext_resource type="Texture2D" uid="uid://dxf27tq7j63l6" path="res://Assets/Items/trash_can.png" id="6_narnm"]
 [ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="8_txodg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pvp5e"]
@@ -142,10 +143,15 @@ texture = ExtResource("3_7nh3m")
 2:1/0 = 0
 2:1/0/y_sort_origin = 10
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ufp3b"]
+texture = ExtResource("6_narnm")
+0:0/0 = 0
+
 [sub_resource type="TileSet" id="TileSet_8skpn"]
 sources/0 = SubResource("TileSetAtlasSource_pvp5e")
 sources/1 = SubResource("TileSetAtlasSource_j1i8s")
 sources/2 = SubResource("TileSetAtlasSource_pb1jh")
+sources/3 = SubResource("TileSetAtlasSource_ufp3b")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trv43"]
 atlas = ExtResource("4_1ln6d")
@@ -214,7 +220,7 @@ layer_2/modulate = Color(1, 1, 1, 1)
 layer_2/y_sort_enabled = true
 layer_2/y_sort_origin = 0
 layer_2/z_index = 0
-layer_2/tile_data = PackedInt32Array(393226, 393217, 5, 327682, 524289, 4, 327683, 524289, 4, 589825, 65538, 1, 589824, 2, 1, 589834, 65538, 0, 720905, 327681, 4, 720903, 327681, 4, 720902, 327681, 4, 720900, 327681, 4, 720898, 327681, 4, 720909, 327681, 5, 786445, 327681, 5, 720912, 327681, 5, 786448, 327681, 5, 262157, 589825, 1, 262158, 655361, 1, 327693, 589825, 2, 327694, 655361, 2)
+layer_2/tile_data = PackedInt32Array(327682, 524289, 4, 327683, 524289, 4, 589825, 65538, 1, 589824, 2, 1, 589834, 65538, 0, 720905, 327681, 4, 720903, 327681, 4, 720902, 327681, 4, 720900, 327681, 4, 720898, 327681, 4, 720909, 327681, 5, 786445, 327681, 5, 720912, 327681, 5, 786448, 327681, 5, 262157, 589825, 1, 262158, 655361, 1, 327693, 589825, 2, 327694, 655361, 2, 393226, 3, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Node2D"]
 y_sort_enabled = true
@@ -232,9 +238,9 @@ zoom = Vector2(10, 10)
 [node name="Title" type="Label" parent="."]
 layout_mode = 0
 offset_left = 21.0
-offset_top = 98.0
+offset_top = 88.0
 offset_right = 149.0
-offset_bottom = 121.0
+offset_bottom = 111.0
 scale = Vector2(1.2, 1.2)
 theme_override_fonts/font = ExtResource("6_dbh23")
 theme_override_font_sizes/font_size = 16
@@ -307,3 +313,23 @@ text = "Credits
 "
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="EscTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="EscapeText" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 21.0
+offset_top = 191.0
+offset_right = 205.0
+offset_bottom = 201.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("8_txodg")
+theme_override_font_sizes/font_size = 8
+text = "Press Esc Again To Quit"
+
+[connection signal="button_down" from="PlayButton" to="." method="_on_play_button_button_down"]
+[connection signal="button_down" from="TutorialButton" to="." method="_on_tutorial_button_button_down"]
+[connection signal="button_down" from="CreditsButton" to="." method="_on_credits_button_button_down"]
+[connection signal="timeout" from="EscTimer" to="." method="_on_esc_timer_timeout"]

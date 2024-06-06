@@ -5,6 +5,14 @@ extends CharacterBody2D
 @onready var timer = $DozeTimer
 @onready var stamina = $StaminaTimer
 @onready var action_prompt = $ActionPrompt2
+@onready var pie = $Pie
+@onready var square = $Square
+@onready var croissant = $Croissant
+@onready var tiramisu = $Tiramisu
+@onready var pastry = $Pastry
+@onready var coffee = $Coffee
+@onready var cash = $Cash
+@onready var bill = $Bill
 
 var SPEED = 200
 var has_idled = false
@@ -14,6 +22,7 @@ var sitting = false
 var seating_customer: CharacterBody2D = null 
 var chair = null
 var near_chair = false
+var food_visible = false
 
 # WILL NEED TO IMPLEMENT COFFEE MACHINE AND OVEN WITH TIMERS FOR FOOD
 # NEED CASH REGISTER OR SOMETHING FOR BILLS (AND BILL SPRITE)

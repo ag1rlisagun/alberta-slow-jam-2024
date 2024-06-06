@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://ciqkikx7a5647"]
+
+[ext_resource type="Script" path="res://Scenes/Menus/tutorial.gd" id="1_04qu4"]
+[ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="2_rkwwp"]
+
+[node name="Tutorial" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_04qu4")
+
+[node name="EscapeText" type="Label" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 1.0
+offset_top = 81.0
+offset_right = 185.0
+offset_bottom = 91.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("2_rkwwp")
+theme_override_font_sizes/font_size = 8
+text = "Press Esc Again To Quit"
+
+[node name="EscTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="timeout" from="EscTimer" to="." method="_on_esc_timer_timeout"]

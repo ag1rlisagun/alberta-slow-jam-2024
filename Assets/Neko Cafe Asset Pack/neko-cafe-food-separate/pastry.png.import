@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bl2d01xum3ye0"
-path="res://.godot/imported/Bakery and Cafe_Free.png-09c83d0abc371738a9eabc6e9fa08acc.ctex"
+uid="uid://cv25um8ijg026"
+path="res://.godot/imported/pastry.png-185ac79d9a0531c5000f255f05a377da.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Items/Bakery and Cafe_Free.png"
-dest_files=["res://.godot/imported/Bakery and Cafe_Free.png-09c83d0abc371738a9eabc6e9fa08acc.ctex"]
+source_file="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/pastry.png"
+dest_files=["res://.godot/imported/pastry.png-185ac79d9a0531c5000f255f05a377da.ctex"]
 
 [params]
 

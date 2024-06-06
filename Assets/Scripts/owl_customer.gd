@@ -64,16 +64,25 @@ enum {
 @onready var customer_text = $CustomerText
 @onready var nav = $NavigationAgent2D
 @onready var current_state = ENTER
+@onready var pie = $Pie
+@onready var square = $Square
+@onready var croissant = $Croissant
+@onready var tiramisu = $Tiramisu
+@onready var pastry = $Pastry
+@onready var coffee = $Coffee
+@onready var cash = $Cash
 
 const SPEED = 75
 
 var player_near = false
 var sitting = false
-var coffee = "coffee"
-var food_list = ["croissant", "pie", "pastry", "square"]
+var food_list = ["coffee", "croissant", "pie", "pastry", "square"]
 var state_list = ["ENTER", "SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
 var chair = null
 var getting_seated = false
+var bill = 0
+var bill_paid = false
+var food_visible = false
 
 func owl_customer():
 	pass
@@ -172,7 +181,7 @@ func _process(delta):
 			nav.set_velocity_forced(velocity)
 			move_and_slide()
 
-	if player_near and current_state != DONE:
+	if player_near:
 		if player.has_customer() == null and current_state == SEAT_WAITING:
 			customer_text.visible = true
 			customer_text.text = "Interact"
@@ -182,12 +191,12 @@ func _process(delta):
 				current_state = BEING_SEATED
 				print("45 sec timer STOPPED")
 				player.seat_customer(self)
-		else:
-			customer_text.visible = false
+	else:
+		customer_text.visible = false
 	
 	test_text.text = state_list[current_state]
 	
-	if self.velocity == Vector2(0,0) or sitting:
+	if self.velocity == Vector2(0,0) or sitting or current_state == SEAT_WAITING:
 		if sitting:
 			animate.play("sit")
 		else:

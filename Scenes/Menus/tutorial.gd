@@ -1,6 +1,5 @@
 extends Control
 
-
 @onready var escape_text = $EscapeText
 @onready var esc_timer = $EscTimer
 
@@ -18,24 +17,12 @@ func _process(delta):
 			get_tree().change_scene_to_file("res://Scenes/Menus/start_menu.tscn")
 		else:
 			handle_escape()
-
-
-func _on_play_button_button_down():
-	get_tree().change_scene_to_file("res://Scenes/game.tscn")
-
-
-func _on_tutorial_button_button_down():
-	get_tree().change_scene_to_file("res://Scenes/Menus/tutorial.tscn")
-
-
-func _on_credits_button_button_down():
-	get_tree().change_scene_to_file("res://Scenes/Menus/credits.tscn")
-
+	
 func handle_escape():
 	escaping = true
 	escape_text.visible = true
 	esc_timer.start()
-
+	
 func _on_esc_timer_timeout():
 	escaping = false
 	escape_text.visible = false

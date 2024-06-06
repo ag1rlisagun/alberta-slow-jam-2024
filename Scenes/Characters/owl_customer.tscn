@@ -1,10 +1,17 @@
-[gd_scene load_steps=22 format=3 uid="uid://cysu7ji6dt2o3"]
+[gd_scene load_steps=29 format=3 uid="uid://cysu7ji6dt2o3"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/owl_customer.gd" id="1_o4urg"]
 [ext_resource type="Texture2D" uid="uid://ck4qt50dv6lvs" path="res://Assets/Characters/invertedBird.png" id="2_cdrne"]
 [ext_resource type="FontFile" uid="uid://cdh2ioflai21l" path="res://Assets/Fonts/dogica/OTF/dogica.otf" id="3_6dd7j"]
 [ext_resource type="Texture2D" uid="uid://cwpnfi438tfqb" path="res://Assets/Characters/simpleBird-Sheet.png" id="3_47i5c"]
 [ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="4_104g0"]
+[ext_resource type="Texture2D" uid="uid://ei4qineqeec8" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/pie.png" id="6_axib1"]
+[ext_resource type="Texture2D" uid="uid://cwthkfbqw3tyj" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/square.png" id="7_uuney"]
+[ext_resource type="Texture2D" uid="uid://bmt30gsyiaci5" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/croissant.png" id="8_kmtop"]
+[ext_resource type="Texture2D" uid="uid://bjrpbnupj3qxb" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/tiramisu.png" id="9_aqu26"]
+[ext_resource type="Texture2D" uid="uid://cv25um8ijg026" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/pastry.png" id="10_q71gy"]
+[ext_resource type="Texture2D" uid="uid://x8fbjkka1jsw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/coffee.png" id="11_rjxrb"]
+[ext_resource type="Texture2D" uid="uid://dh68ufj15xian" path="res://Assets/Items/cash_wad.png" id="12_jd4ja"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_40rm6"]
 atlas = ExtResource("2_cdrne")
@@ -218,7 +225,51 @@ one_shot = true
 path_desired_distance = 35.0
 path_postprocessing = 1
 avoidance_enabled = true
-radius = 65.0
+radius = 133.77
+neighbor_distance = 31739.8
+
+[node name="Pie" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+texture_filter = 1
+position = Vector2(11, -11)
+texture = ExtResource("6_axib1")
+
+[node name="Square" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("7_uuney")
+
+[node name="Croissant" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("8_kmtop")
+
+[node name="Tiramisu" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("9_aqu26")
+
+[node name="Pastry" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("10_q71gy")
+
+[node name="Coffee" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("11_rjxrb")
+
+[node name="Cash" type="Sprite2D" parent="."]
+visible = false
+top_level = true
+position = Vector2(11, -11)
+texture = ExtResource("12_jd4ja")
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

@@ -1,5 +1,9 @@
 extends Node2D
 
+# OBJECTIVE: Survive the shift and make monay
+
+# need to be able to go back to start menu mid game
+
 # START SCREEN IS A ZOOMIN OF THE OWL SLEEPING AT THE COUNTER!!!!!!
 # WITH PLAY AND "HOW TO PLAY" YAYYYYY SO CUTE AND DON'T HAVE TO DRAW!!
 # CLICK PLAY AND IT FADES/TRANSITIONS TO BLACK THEN TO SCENE
@@ -36,6 +40,11 @@ extends Node2D
 @onready var spawn_area = $Node2D/CustomerSpawn
 @onready var spawn_timer = $Node2D/CustomerSpawn/SpawnTimer
 @onready var rng = RandomNumberGenerator.new()
+@onready var escape_text = $EscapeText
+@onready var esc_timer = $EscTimer
+
+var escaping = false
+
 
 func spawn():
 	var cust_scene = preload("res://Scenes/Characters/owl_customer.tscn")
@@ -55,7 +64,12 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	if Input.is_action_just_pressed("esc"):
+		if escaping:
+			get_tree().change_scene_to_file("res://Scenes/Menus/start_menu.tscn")
+		else:
+			handle_escape()
+		
 
 func _on_exit_body_entered(body):
 	if body.has_method("owl_customer"):
@@ -68,3 +82,11 @@ func _on_spawn_timer_timeout():
 	spawn_timer.set_wait_time(rng.randf_range(20.0, 50.0))
 	spawn()
 	
+func handle_escape():
+	escaping = true
+	escape_text.visible = true
+	esc_timer.start()
+
+func _on_esc_timer_timeout():
+	escaping = false
+	escape_text.visible = false
