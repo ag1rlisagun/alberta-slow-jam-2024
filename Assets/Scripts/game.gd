@@ -85,12 +85,15 @@ extends Node2D
 
 @onready var game_timer = $GameTimer
 
+@onready var game_over_text = $GameOverText
+@onready var start_menu_timer = $StartMenuCountdown/StartMenuTimer
+@onready var start_menu_countdown = $StartMenuCountdown
+
 var escaping = false
 var score = 45
 var game_over = false
 var game_won = false
 var game_updated = false
-
 
 func spawn():
 	var cust_scene = preload("res://Scenes/Characters/owl_customer.tscn")
@@ -132,11 +135,20 @@ func _process(delta):
 		
 	if game_over and !game_updated: 
 	# stop processes and show something different (plus save score if won)
+		game_over_text.visible = true
 		if game_won: 
-			print("You survived the shift!")
+			# print("You survived the shift!")
+			game_over_text.text = "You survived the shift and made a profit of $" + str(score-45) + "!"
+			start_menu_timer.start()
 		else:
-			print("You lost...")
+			# print("You lost...")
+			game_over_text.text = "You lost..."
+			start_menu_timer.start()
 		game_updated = true
+	
+	if game_over and !start_menu_timer.is_stopped():
+		start_menu_countdown.visible = true
+		start_menu_countdown.text = "Back to the main menu in " + str(int(start_menu_timer.get_time_left()))
 		
 func _on_exit_body_entered(body):
 	if body.has_method("owl_customer"):
@@ -175,4 +187,7 @@ func _on_player_boundary_body_exited(body):
 func _on_game_timer_timeout():
 	game_over = true
 	game_won = true
-	
+
+func _on_start_menu_timer_timeout():
+	start_menu_countdown.visible = false
+	get_tree().change_scene_to_file("res://Scenes/Menus/start_menu.tscn")

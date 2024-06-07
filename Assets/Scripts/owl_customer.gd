@@ -264,9 +264,7 @@ func _process(delta):
 			if bill_paid:
 				bill += rng.randi_range(0, 10)
 			if !bill_paid:
-				# Testing
-				# bill = -bill
-				bill = -15
+				bill = -bill
 				
 			nav.set_target_position(exit.position)
 			var move_direction = position.direction_to(nav.get_next_path_position())

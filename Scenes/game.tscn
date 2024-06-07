@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://0c0ulhk6cgnb"]
+[gd_scene load_steps=37 format=3 uid="uid://0c0ulhk6cgnb"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/game.gd" id="1_8trmo"]
 [ext_resource type="Texture2D" uid="uid://da8w5skeh0wdw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-tilemap.png" id="1_iiiuj"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bmt30gsyiaci5" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/croissant.png" id="14_hwxpn"]
 [ext_resource type="Texture2D" uid="uid://bjrpbnupj3qxb" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/tiramisu.png" id="15_qqdtw"]
 [ext_resource type="Texture2D" uid="uid://ei4qineqeec8" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food-separate/pie.png" id="16_qddru"]
+[ext_resource type="FontFile" uid="uid://bw1bscnrnjag2" path="res://Assets/Fonts/dogica/TTF/dogicabold.ttf" id="21_um2mg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7la44"]
 texture = ExtResource("1_iiiuj")
@@ -567,7 +568,7 @@ layer_2/modulate = Color(1, 1, 1, 1)
 layer_2/y_sort_enabled = true
 layer_2/y_sort_origin = 0
 layer_2/z_index = 0
-layer_2/tile_data = PackedInt32Array(458754, 524290, 4, 458755, 524290, 4, 720896, 1, 1, 720897, 65537, 1, 1179672, 393218, 5, 720899, 5, 0, 786435, 5, 1, 720900, 6, 0, 786436, 6, 1, 524298, 3, 0, 524312, 393218, 5, 1179648, 393218, 5)
+layer_2/tile_data = PackedInt32Array(458754, 524290, 4, 458755, 524290, 4, 720896, 1, 1, 720897, 65537, 1, 1179672, 393218, 5, 720899, 5, 0, 786435, 5, 1, 720900, 6, 0, 786436, 6, 1, 524298, 3, 0, 1179648, 393218, 5)
 
 [node name="Areas" type="Node2D" parent="Node2D"]
 y_sort_enabled = true
@@ -926,7 +927,38 @@ autowrap_mode = 2
 wait_time = 3.0
 
 [node name="GameTimer" type="Timer" parent="."]
-wait_time = 300.0
+wait_time = 180.0
+
+[node name="GameOverText" type="Label" parent="."]
+visible = false
+top_level = true
+offset_left = 34.0
+offset_top = 102.0
+offset_right = 365.0
+offset_bottom = 183.0
+theme_override_fonts/font = ExtResource("21_um2mg")
+theme_override_font_sizes/font_size = 16
+text = "jnhbgvfchjk"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 2
+
+[node name="StartMenuCountdown" type="Label" parent="."]
+visible = false
+top_level = true
+offset_left = 148.0
+offset_top = 195.0
+offset_right = 253.0
+offset_bottom = 205.0
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("9_elom8")
+theme_override_font_sizes/font_size = 8
+text = "hai"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="StartMenuTimer" type="Timer" parent="StartMenuCountdown"]
+wait_time = 5.0
 
 [connection signal="body_entered" from="Node2D/Areas/Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_exited" from="Node2D/Areas/Exit" to="." method="_on_exit_body_exited"]
@@ -935,3 +967,4 @@ wait_time = 300.0
 [connection signal="timeout" from="Node2D/CustomerSpawn/SpawnTimer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="timeout" from="EscTimer" to="." method="_on_esc_timer_timeout"]
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
+[connection signal="timeout" from="StartMenuCountdown/StartMenuTimer" to="." method="_on_start_menu_timer_timeout"]
