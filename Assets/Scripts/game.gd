@@ -102,6 +102,8 @@ var player_near_cof2 = false
 var oven_baking = false
 var coffee_going_1 = false
 var coffee_going_2 = false
+var coffee1_made = false
+var coffee2_made = false
 var food_baking = null
 
 func empty_oven():
@@ -153,6 +155,29 @@ func _process(delta):
 			$Node2D/Player.clear_item()
 	else:
 		discard_prompt.visible = false
+		
+		
+	if coffee1_made:
+		coff_1_interface.visible = true
+	else:
+		if player_near_cof1:
+			if !coffee_going_1:
+				coff_1_interface.visible = true
+			else:
+				coff_1_interface.visible = false
+		else:
+			coff_1_interface.visible = false
+			
+	if coffee2_made:
+		coff_2_interface.visible = true
+	else:
+		if player_near_cof2:
+			if !coffee_going_2:
+				coff_2_interface.visible = true
+			else:
+				coff_2_interface.visible = false
+		else:
+			coff_2_interface.visible = false
 		
 	if player_near_oven:
 		if !oven_baking:
@@ -313,32 +338,55 @@ func _on_done_button_pressed():
 
 
 func _on_fir_coffee_mac_body_entered(body):
-	pass # Replace with function body.
+	if body.has_method("owl_player"):
+		player_near_cof1 = true
 
 
 func _on_fir_coffee_mac_body_exited(body):
-	pass # Replace with function body.
+	if body.has_method("owl_player"):
+		player_near_cof1 = false
 
 
 func _on_sec_coffee_mac_body_entered(body):
-	pass # Replace with function body.
+	if body.has_method("owl_player"):
+		player_near_cof2 = true
 
 
 func _on_sec_coffee_mac_body_exited(body):
-	pass # Replace with function body.
+	if body.has_method("owl_player"):
+		player_near_cof2 = false
 
 
 func _on_first_coffee_timer_timeout():
-	pass # Replace with function body.
+	coffee_going_1 = false
+	coffee1_made = true
+	first_coffee_timer.stop()
 
 
 func _on_second_coffee_timer_timeout():
-	pass # Replace with function body.
+	coffee_going_2 = false
+	coffee2_made = true
+	second_coffee_timer.stop()
 
 
 func _on_coffee_1_button_pressed():
-	pass # Replace with function body.
-
+	if player_near_cof1:
+		if coffee1_made:
+			if $Node2D/Player.holding_item() == null:
+				$Node2D/Player.take_item("coffee")
+				coffee1_made = false
+				coff_1_interface.visible = false
+		else:
+			coffee_going_1 = true
+			first_coffee_timer.start()
 
 func _on_coffee_2_button_pressed():
-	pass # Replace with function body.
+	if player_near_cof2:
+		if coffee2_made:
+			if $Node2D/Player.holding_item() == null:
+				$Node2D/Player.take_item("coffee")
+				coffee2_made = false
+				coff_2_interface.visible = false
+		else:
+			coffee_going_2 = true
+			second_coffee_timer.start()

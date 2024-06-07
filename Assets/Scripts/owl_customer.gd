@@ -85,7 +85,7 @@ const SPEED = 75
 
 var player_near = false
 var sitting = false
-var food_list = [order_coffee, order_croissant, order_pie, order_pastry, order_square]
+@onready var food_list = [order_coffee, order_croissant, order_pie, order_pastry, order_square]
 var food_string_list = ["coffee", "croissant", "pie", "pastry", "square"]
 var state_list = ["ENTER", "SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
 var chair = null
@@ -94,6 +94,8 @@ var bill = 0
 var bill_paid = false
 var current_food = null
 var current_food_string = null
+var chosen_food = false
+var received_wrong_order = false
 
 func owl_customer():
 	pass
@@ -111,20 +113,26 @@ func receive_order(item):
 	if current_state == DRINK_WAITING:
 		if item != "coffee":
 			wait_45.stop()
+			
+			bill = -bill
 			current_state = DONE
+			received_wrong_order = true
 		else:
 			wait_45.stop()
 			current_state = DRINK_CONSUMING
 	if current_state == FOOD_WAITING:
 		if item != current_food_string:
 			wait_60.stop()
+			bill = -bill
 			current_state = DONE
+			received_wrong_order = true
 		else:
 			wait_60.stop()
 			current_state = FOOD_CONSUMING
 	if current_state == BILL_WAITING:
 		if item != "bill":
-			bill_paid = false
+			bill = -bill
+			received_wrong_order = true
 		else:
 			bill_paid = true
 		wait_45.stop()
@@ -136,9 +144,13 @@ func get_seated(seat):
 	getting_seated = true
 	
 func choose_food(): # need to make a function to show the right food sprite
-	food_list.shuffle()
-	return food_list.front()
-	
+	if !chosen_food:
+		rng.randomize()
+		food_list.shuffle()
+		current_food = food_list.front()
+		current_food_string  = food_string_list[food_list.bsearch(current_food)]
+		chosen_food = true
+		
 func order(food_item): 
 # function to order any food, all the processes to show the food sprite, and the timer
 # need to make separate the food/coffee sprites in the sheet
@@ -147,6 +159,7 @@ func order(food_item):
 	
 func hide_order(food_item):
 	order_bg.visible = false
+	order_coffee.visible = false
 	food_item.visible = false
 	
 func hold_item(item):
@@ -234,11 +247,12 @@ func _process(delta):
 		# need a function for a new timer, and to trigger DONE state if finished 
 		# also to take away points for unpaid coffee
 			hide_item(coffee)
-			current_food = choose_food()
+			choose_food()
+			print("order: " + str(current_food))
 			order(current_food)
 			if wait_60.is_stopped():
 				wait_60.start()
-				print("food waiting, 0 sec timer START")
+				print("food waiting, 45 sec timer START")
 		FOOD_CONSUMING:
 		# 30secs eating
 			bill = 9
@@ -265,8 +279,13 @@ func _process(delta):
 			hide_item(cash)
 			if bill_paid:
 				bill += rng.randi_range(0, 10)
-			if !bill_paid:
-				bill = -bill
+			else:
+				if !received_wrong_order:
+					bill = -bill
+#			if !bill_paid:
+#				bill = -bdill
+				
+			print("customer's bill: " + str(bill))
 				
 			nav.set_target_position(exit.position)
 			var move_direction = position.direction_to(nav.get_next_path_position())

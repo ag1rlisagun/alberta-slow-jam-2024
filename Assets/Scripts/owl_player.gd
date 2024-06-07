@@ -134,20 +134,29 @@ func _physics_process(delta):
 		else:
 			animate.play("walk")
 			
-	if near_chair and chair != null:
-		if chair.return_empty():
-			if seating_customer != null:
-				action_prompt.visible = true
-				action_prompt.text = "Seat"
-				if Input.is_action_just_pressed("action"):
-					if seating_customer.return_state() == 2:
-						seating_customer.get_seated(chair)
-						chair = null
-	if serving_customer != null and item_holding != null:
-		action_prompt.visible = true
-		action_prompt.text = "Serve"
-		if Input.is_action_just_pressed("action"):
-			serving_customer.receive_order(item_holding)
+	if near_chair:
+		if chair != null:
+			if chair.return_empty():
+				if seating_customer != null:
+					action_prompt.visible = true
+					action_prompt.text = "Seat"
+					if Input.is_action_just_pressed("action"):
+						if seating_customer.return_state() == 2:
+							seating_customer.get_seated(chair)
+							chair = null
+				else:
+					action_prompt.visible = false
+			else:
+				action_prompt.visible = false
+	if serving_customer != null:
+		if item_holding != null:
+			action_prompt.visible = true
+			action_prompt.text = "Serve"
+			if Input.is_action_just_pressed("action"):
+				serving_customer.receive_order(item_holding)
+				clear_item()
+		else:
+			action_prompt.visible = false
 	else:
 		action_prompt.visible = false
 	

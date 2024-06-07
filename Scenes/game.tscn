@@ -677,13 +677,14 @@ x_direction = -1
 [node name="FirCoffeeMac" type="Area2D" parent="Node2D/Areas"]
 
 [node name="FirstCoffeeTimer" type="Timer" parent="Node2D/Areas/FirCoffeeMac"]
-wait_time = 7.0
+wait_time = 3.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/FirCoffeeMac"]
 position = Vector2(40.5, 133)
 shape = SubResource("RectangleShape2D_lekxd")
 
 [node name="Coff1Interface" type="Node2D" parent="Node2D/Areas/FirCoffeeMac"]
+visible = false
 
 [node name="CoffeeBox" type="Sprite2D" parent="Node2D/Areas/FirCoffeeMac/Coff1Interface"]
 top_level = true
@@ -711,13 +712,14 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
 [node name="SecCoffeeMac" type="Area2D" parent="Node2D/Areas"]
 
 [node name="SecondCoffeeTimer" type="Timer" parent="Node2D/Areas/SecCoffeeMac"]
-wait_time = 7.0
+wait_time = 3.0
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Node2D/Areas/SecCoffeeMac"]
 position = Vector2(56.5, 133)
 shape = SubResource("RectangleShape2D_lekxd")
 
 [node name="Coff2Interface" type="Node2D" parent="Node2D/Areas/SecCoffeeMac"]
+visible = false
 
 [node name="CoffeeBox2" type="Sprite2D" parent="Node2D/Areas/SecCoffeeMac/Coff2Interface"]
 top_level = true
