@@ -86,12 +86,14 @@ const SPEED = 75
 var player_near = false
 var sitting = false
 var food_list = [order_coffee, order_croissant, order_pie, order_pastry, order_square]
+var food_string_list = ["coffee", "croissant", "pie", "pastry", "square"]
 var state_list = ["ENTER", "SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
 var chair = null
 var getting_seated = false
 var bill = 0
 var bill_paid = false
 var current_food = null
+var current_food_string = null
 
 func owl_customer():
 	pass
@@ -107,14 +109,14 @@ func receive_order(item):
 	# player calls this with an item in their hand 
 	# responds depending on the item
 	if current_state == DRINK_WAITING:
-		if item != order_coffee:
+		if item != "coffee":
 			wait_45.stop()
 			current_state = DONE
 		else:
 			wait_45.stop()
 			current_state = DRINK_CONSUMING
 	if current_state == FOOD_WAITING:
-		if item != current_food:
+		if item != current_food_string:
 			wait_60.stop()
 			current_state = DONE
 		else:
@@ -137,15 +139,15 @@ func choose_food(): # need to make a function to show the right food sprite
 	food_list.shuffle()
 	return food_list.front()
 	
-func order(food_string): 
+func order(food_item): 
 # function to order any food, all the processes to show the food sprite, and the timer
 # need to make separate the food/coffee sprites in the sheet
 	order_bg.visible = true
-	food_string.visible = true
+	food_item.visible = true
 	
-func hide_order(food_string):
+func hide_order(food_item):
 	order_bg.visible = false
-	food_string.visible = false
+	food_item.visible = false
 	
 func hold_item(item):
 	if item == order_croissant:

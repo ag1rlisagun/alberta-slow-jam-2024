@@ -45,26 +45,23 @@ extends Node2D
 @onready var player_bound_collision = $Node2D/Areas/PlayerBoundary/StaticBody2D/CollisionShape2D2
 
 @onready var trash = $Node2D/Areas/Trash
+@onready var discard_prompt = $Node2D/Areas/Trash/DiscardPrompt
 
 @onready var fir_coffee_mac = $Node2D/Areas/FirCoffeeMac
-@onready var coffee_box = $Node2D/Areas/FirCoffeeMac/CoffeeBox
-@onready var order_coffee = $Node2D/Areas/FirCoffeeMac/CoffeeBox/OrderCoffee
+@onready var coff_1_interface = $Node2D/Areas/FirCoffeeMac/Coff1Interface
+@onready var coff_2_interface = $Node2D/Areas/SecCoffeeMac/Coff2Interface
 
 @onready var sec_coffee_mac = $Node2D/Areas/SecCoffeeMac
-@onready var coffee_box_2 = $Node2D/Areas/SecCoffeeMac/CoffeeBox2
-@onready var order_coffee_2 = $Node2D/Areas/SecCoffeeMac/CoffeeBox2/OrderCoffee2
 
 @onready var oven = $Node2D/Areas/Oven
-@onready var pastry_box = $Node2D/Areas/Oven/PastryBox
-@onready var order_pastry = $Node2D/Areas/Oven/PastryBox/OrderPastry
-@onready var square_box = $Node2D/Areas/Oven/SquareBox
-@onready var order_square = $Node2D/Areas/Oven/SquareBox/OrderSquare
-@onready var croissant_box = $Node2D/Areas/Oven/CroissantBox
-@onready var order_croissant = $Node2D/Areas/Oven/CroissantBox/OrderCroissant
-@onready var pie_box = $Node2D/Areas/Oven/PieBox
-@onready var order_pie = $Node2D/Areas/Oven/PieBox/OrderPie
-@onready var tiramisu_box = $Node2D/Areas/Oven/TiramisuBox
-@onready var order_tiramisu = $Node2D/Areas/Oven/TiramisuBox/OrderTiramisu
+
+@onready var order_pastry = $Node2D/Areas/Oven/OvenInterface/PastryBox/OrderPastry
+@onready var order_square = $Node2D/Areas/Oven/OvenInterface/SquareBox/OrderSquare
+@onready var order_croissant = $Node2D/Areas/Oven/OvenInterface/CroissantBox/OrderCroissant
+@onready var order_pie = $Node2D/Areas/Oven/OvenInterface/PieBox/OrderPie
+@onready var order_tiramisu = $Node2D/Areas/Oven/OvenInterface/TiramisuBox/OrderTiramisu
+
+@onready var done_button = $Node2D/Areas/Oven/DoneBox/DoneButton
 @onready var done_box = $Node2D/Areas/Oven/DoneBox
 @onready var done_tiramisu = $Node2D/Areas/Oven/DoneBox/DoneTiramisu
 @onready var done_square = $Node2D/Areas/Oven/DoneBox/DoneSquare
@@ -89,11 +86,39 @@ extends Node2D
 @onready var start_menu_timer = $StartMenuCountdown/StartMenuTimer
 @onready var start_menu_countdown = $StartMenuCountdown
 
+@onready var oven_timer = $Node2D/Areas/Oven/OvenTimer
+@onready var first_coffee_timer = $Node2D/Areas/FirCoffeeMac/FirstCoffeeTimer
+@onready var second_coffee_timer = $Node2D/Areas/SecCoffeeMac/SecondCoffeeTimer
+
 var escaping = false
 var score = 45
 var game_over = false
 var game_won = false
 var game_updated = false
+var player_near_trash = false
+var player_near_oven = false
+var player_near_cof1 = false
+var player_near_cof2 = false
+var oven_baking = false
+var coffee_going_1 = false
+var coffee_going_2 = false
+var food_baking = null
+
+func empty_oven():
+	if food_baking == order_pastry:
+		food_baking = "pastry"
+	elif food_baking == order_square:
+		food_baking = "square"
+	elif food_baking == order_pie:
+		food_baking = "pie"
+	elif food_baking == order_croissant:
+		food_baking = "croissant"
+	elif food_baking == order_tiramisu:
+		food_baking = "tiramisu"
+	$Node2D/Player.take_item(food_baking)
+	print("Giving player " + str(food_baking))
+	food_baking = null
+	print("Food baking = " + str(food_baking))
 
 func spawn():
 	var cust_scene = preload("res://Scenes/Characters/owl_customer.tscn")
@@ -121,6 +146,27 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
+	if player_near_trash and $Node2D/Player.holding_item() != null:
+		discard_prompt.visible = true
+		if Input.is_action_just_pressed("action"):
+			$Node2D/Player.clear_item()
+	else:
+		discard_prompt.visible = false
+		
+	if player_near_oven:
+		if !oven_baking:
+			if food_baking == null:
+				$Node2D/Areas/Oven/OvenInterface.visible = true
+				# showing the menu if nothing is happening
+			else:
+				$Node2D/Areas/Oven/OvenInterface.visible = false
+		else:
+			$Node2D/Areas/Oven/OvenInterface.visible = false
+	else:
+		$Node2D/Areas/Oven/OvenInterface.visible = false
+	
+	
 	score_label.text = "Money: $" + str(score)
 	
 	if Input.is_action_just_pressed("esc"):
@@ -191,3 +237,108 @@ func _on_game_timer_timeout():
 func _on_start_menu_timer_timeout():
 	start_menu_countdown.visible = false
 	get_tree().change_scene_to_file("res://Scenes/Menus/start_menu.tscn")
+
+func _on_trash_body_entered(body):
+	if body.has_method("owl_player"):
+		if body.holding_item() != null:
+			player_near_trash = true
+
+func _on_trash_body_exited(body):
+	if body.has_method("owl_player"):
+		player_near_trash = false
+
+func _on_oven_body_entered(body):
+	if body.has_method("owl_player"):
+			player_near_oven = true
+
+func _on_oven_body_exited(body):
+	if body.has_method("owl_player"):
+			player_near_oven = false
+
+func _on_pastry_button_pressed():
+	food_baking = order_pastry
+	oven_baking = true
+	oven_timer.start()
+	$Node2D/Areas/Oven/OvenInterface.visible = false
+	print("Oven started, baking " + str(food_baking))
+
+func _on_square_button_pressed():
+	food_baking = order_square
+	oven_baking = true
+	oven_timer.start()
+	$Node2D/Areas/Oven/OvenInterface.visible = false
+	print("Oven started, baking " + str(food_baking))
+
+func _on_croissant_button_pressed():
+	food_baking = order_croissant
+	oven_baking = true
+	oven_timer.start()
+	$Node2D/Areas/Oven/OvenInterface.visible = false
+	print("Oven started, baking " + str(food_baking))
+
+func _on_pie_button_pressed():
+	food_baking = order_pie
+	oven_baking = true
+	oven_timer.start()
+	$Node2D/Areas/Oven/OvenInterface.visible = false
+	print("Oven started, baking " + str(food_baking))
+
+func _on_tiramisu_button_pressed():
+	food_baking = order_tiramisu
+	oven_baking = true
+	oven_timer.start()
+	$Node2D/Areas/Oven/OvenInterface.visible = false
+	print("Oven started, baking " + str(food_baking))
+
+func _on_oven_timer_timeout():
+	print("Finished baking " + str(food_baking))
+	# $Node2D/Areas/Oven/OvenInterface.visible = false
+	done_box.visible = true
+	if food_baking == order_pastry:
+		done_pastry.visible = true
+	if food_baking == order_square:
+		done_square.visible = true
+	if food_baking == order_pie:
+		done_pie.visible = true
+	if food_baking == order_croissant:
+		done_croissant.visible = true
+	if food_baking == order_tiramisu:
+		done_tiramisu.visible = true
+	oven_baking = false
+	oven_timer.stop()
+
+func _on_done_button_pressed():
+	empty_oven()
+	done_box.visible = false
+
+
+func _on_fir_coffee_mac_body_entered(body):
+	pass # Replace with function body.
+
+
+func _on_fir_coffee_mac_body_exited(body):
+	pass # Replace with function body.
+
+
+func _on_sec_coffee_mac_body_entered(body):
+	pass # Replace with function body.
+
+
+func _on_sec_coffee_mac_body_exited(body):
+	pass # Replace with function body.
+
+
+func _on_first_coffee_timer_timeout():
+	pass # Replace with function body.
+
+
+func _on_second_coffee_timer_timeout():
+	pass # Replace with function body.
+
+
+func _on_coffee_1_button_pressed():
+	pass # Replace with function body.
+
+
+func _on_coffee_2_button_pressed():
+	pass # Replace with function body.

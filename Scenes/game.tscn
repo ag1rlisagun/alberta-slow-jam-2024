@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://0c0ulhk6cgnb"]
+[gd_scene load_steps=42 format=3 uid="uid://0c0ulhk6cgnb"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/game.gd" id="1_8trmo"]
 [ext_resource type="Texture2D" uid="uid://da8w5skeh0wdw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-tilemap.png" id="1_iiiuj"]
@@ -519,6 +519,16 @@ size = Vector2(29.625, 41)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lekxd"]
 size = Vector2(13, 38)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7uv1l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pu0gu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dfrpf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lt6xa"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jcyga"]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xgwyc"]
 size = Vector2(20, 25)
 
@@ -666,43 +676,71 @@ x_direction = -1
 
 [node name="FirCoffeeMac" type="Area2D" parent="Node2D/Areas"]
 
+[node name="FirstCoffeeTimer" type="Timer" parent="Node2D/Areas/FirCoffeeMac"]
+wait_time = 7.0
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/FirCoffeeMac"]
 position = Vector2(40.5, 133)
 shape = SubResource("RectangleShape2D_lekxd")
 
-[node name="CoffeeBox" type="Sprite2D" parent="Node2D/Areas/FirCoffeeMac"]
-visible = false
+[node name="Coff1Interface" type="Node2D" parent="Node2D/Areas/FirCoffeeMac"]
+
+[node name="CoffeeBox" type="Sprite2D" parent="Node2D/Areas/FirCoffeeMac/Coff1Interface"]
 top_level = true
 position = Vector2(40, 108)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("10_bku24")
 
-[node name="OrderCoffee" type="Sprite2D" parent="Node2D/Areas/FirCoffeeMac/CoffeeBox"]
-visible = false
+[node name="OrderCoffee" type="Sprite2D" parent="Node2D/Areas/FirCoffeeMac/Coff1Interface"]
 top_level = true
 position = Vector2(40, 108)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("11_l48hg")
 
+[node name="Coffee1Button" type="Button" parent="Node2D/Areas/FirCoffeeMac/Coff1Interface/OrderCoffee"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
 [node name="SecCoffeeMac" type="Area2D" parent="Node2D/Areas"]
+
+[node name="SecondCoffeeTimer" type="Timer" parent="Node2D/Areas/SecCoffeeMac"]
+wait_time = 7.0
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Node2D/Areas/SecCoffeeMac"]
 position = Vector2(56.5, 133)
 shape = SubResource("RectangleShape2D_lekxd")
 
-[node name="CoffeeBox2" type="Sprite2D" parent="Node2D/Areas/SecCoffeeMac"]
-visible = false
+[node name="Coff2Interface" type="Node2D" parent="Node2D/Areas/SecCoffeeMac"]
+
+[node name="CoffeeBox2" type="Sprite2D" parent="Node2D/Areas/SecCoffeeMac/Coff2Interface"]
 top_level = true
 position = Vector2(57, 108)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("10_bku24")
 
-[node name="OrderCoffee2" type="Sprite2D" parent="Node2D/Areas/SecCoffeeMac/CoffeeBox2"]
-visible = false
+[node name="OrderCoffee2" type="Sprite2D" parent="Node2D/Areas/SecCoffeeMac/Coff2Interface"]
 top_level = true
 position = Vector2(57, 108)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("11_l48hg")
+
+[node name="Coffee2Button" type="Button" parent="Node2D/Areas/SecCoffeeMac/Coff2Interface/OrderCoffee2"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
 
 [node name="Trash" type="Area2D" parent="Node2D/Areas"]
 
@@ -724,74 +762,12 @@ text = "Discard"
 
 [node name="Oven" type="Area2D" parent="Node2D/Areas"]
 
+[node name="OvenTimer" type="Timer" parent="Node2D/Areas/Oven"]
+wait_time = 15.0
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/Oven"]
 position = Vector2(80, 135)
 shape = SubResource("RectangleShape2D_g2ab0")
-
-[node name="PastryBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
-visible = false
-top_level = true
-position = Vector2(80, 90)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_bku24")
-
-[node name="OrderPastry" type="Sprite2D" parent="Node2D/Areas/Oven/PastryBox"]
-top_level = true
-position = Vector2(80, 90)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("13_stsv6")
-
-[node name="SquareBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
-visible = false
-top_level = true
-position = Vector2(86, 101)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_bku24")
-
-[node name="OrderSquare" type="Sprite2D" parent="Node2D/Areas/Oven/SquareBox"]
-top_level = true
-position = Vector2(86, 101)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("12_xgwlb")
-
-[node name="CroissantBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
-visible = false
-top_level = true
-position = Vector2(74, 101)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_bku24")
-
-[node name="OrderCroissant" type="Sprite2D" parent="Node2D/Areas/Oven/CroissantBox"]
-top_level = true
-position = Vector2(74, 101)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("14_hwxpn")
-
-[node name="PieBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
-visible = false
-top_level = true
-position = Vector2(86, 112)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_bku24")
-
-[node name="OrderPie" type="Sprite2D" parent="Node2D/Areas/Oven/PieBox"]
-top_level = true
-position = Vector2(86, 112)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("16_qddru")
-
-[node name="TiramisuBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
-visible = false
-top_level = true
-position = Vector2(74, 112)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("10_bku24")
-
-[node name="OrderTiramisu" type="Sprite2D" parent="Node2D/Areas/Oven/TiramisuBox"]
-top_level = true
-position = Vector2(74, 112)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("15_qqdtw")
 
 [node name="DoneBox" type="Sprite2D" parent="Node2D/Areas/Oven"]
 visible = false
@@ -799,6 +775,17 @@ top_level = true
 position = Vector2(80, 112)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("10_bku24")
+
+[node name="DoneButton" type="Button" parent="Node2D/Areas/Oven/DoneBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
 
 [node name="DoneTiramisu" type="Sprite2D" parent="Node2D/Areas/Oven/DoneBox"]
 visible = false
@@ -835,6 +822,124 @@ position = Vector2(80, 112)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("13_stsv6")
 
+[node name="OvenInterface" type="Node2D" parent="Node2D/Areas/Oven"]
+visible = false
+
+[node name="PastryBox" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface"]
+top_level = true
+position = Vector2(80, 90)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_bku24")
+
+[node name="OrderPastry" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface/PastryBox"]
+top_level = true
+position = Vector2(80, 90)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("13_stsv6")
+
+[node name="PastryButton" type="Button" parent="Node2D/Areas/Oven/OvenInterface/PastryBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
+[node name="SquareBox" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface"]
+top_level = true
+position = Vector2(86, 101)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_bku24")
+
+[node name="OrderSquare" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface/SquareBox"]
+top_level = true
+position = Vector2(86, 101)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_xgwlb")
+
+[node name="SquareButton" type="Button" parent="Node2D/Areas/Oven/OvenInterface/SquareBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
+[node name="CroissantBox" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface"]
+top_level = true
+position = Vector2(74, 101)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_bku24")
+
+[node name="OrderCroissant" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface/CroissantBox"]
+top_level = true
+position = Vector2(74, 101)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("14_hwxpn")
+
+[node name="CroissantButton" type="Button" parent="Node2D/Areas/Oven/OvenInterface/CroissantBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
+[node name="PieBox" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface"]
+top_level = true
+position = Vector2(86, 112)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_bku24")
+
+[node name="OrderPie" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface/PieBox"]
+top_level = true
+position = Vector2(86, 112)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("16_qddru")
+
+[node name="PieButton" type="Button" parent="Node2D/Areas/Oven/OvenInterface/PieBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
+[node name="TiramisuBox" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface"]
+top_level = true
+position = Vector2(74, 112)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("10_bku24")
+
+[node name="OrderTiramisu" type="Sprite2D" parent="Node2D/Areas/Oven/OvenInterface/TiramisuBox"]
+top_level = true
+position = Vector2(74, 112)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("15_qqdtw")
+
+[node name="TiramisuButton" type="Button" parent="Node2D/Areas/Oven/OvenInterface/TiramisuBox"]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 10.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_7uv1l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_pu0gu")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_dfrpf")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lt6xa")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_jcyga")
+
 [node name="CashRegister" type="Area2D" parent="Node2D/Areas"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/Areas/CashRegister"]
@@ -851,7 +956,8 @@ offset_bottom = 184.0
 scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = ExtResource("9_elom8")
 theme_override_font_sizes/font_size = 8
-text = "Put Cash Away"
+text = "Get The Bill"
+horizontal_alignment = 1
 
 [node name="PlayerBoundary" type="Area2D" parent="Node2D/Areas"]
 
@@ -873,9 +979,10 @@ position = Vector2(200, 192)
 zoom = Vector2(4.8, 4.8)
 
 [node name="Player" parent="Node2D" instance=ExtResource("4_io7fu")]
-position = Vector2(91, 181)
+position = Vector2(127, 193)
 
 [node name="ActionPrompt2" type="Label" parent="Node2D/Player"]
+visible = false
 top_level = true
 offset_left = -188.0
 offset_top = -11.0
@@ -962,6 +1069,25 @@ wait_time = 5.0
 
 [connection signal="body_entered" from="Node2D/Areas/Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_exited" from="Node2D/Areas/Exit" to="." method="_on_exit_body_exited"]
+[connection signal="body_entered" from="Node2D/Areas/FirCoffeeMac" to="." method="_on_fir_coffee_mac_body_entered"]
+[connection signal="body_exited" from="Node2D/Areas/FirCoffeeMac" to="." method="_on_fir_coffee_mac_body_exited"]
+[connection signal="timeout" from="Node2D/Areas/FirCoffeeMac/FirstCoffeeTimer" to="." method="_on_first_coffee_timer_timeout"]
+[connection signal="pressed" from="Node2D/Areas/FirCoffeeMac/Coff1Interface/OrderCoffee/Coffee1Button" to="." method="_on_coffee_1_button_pressed"]
+[connection signal="body_entered" from="Node2D/Areas/SecCoffeeMac" to="." method="_on_sec_coffee_mac_body_entered"]
+[connection signal="body_exited" from="Node2D/Areas/SecCoffeeMac" to="." method="_on_sec_coffee_mac_body_exited"]
+[connection signal="timeout" from="Node2D/Areas/SecCoffeeMac/SecondCoffeeTimer" to="." method="_on_second_coffee_timer_timeout"]
+[connection signal="pressed" from="Node2D/Areas/SecCoffeeMac/Coff2Interface/OrderCoffee2/Coffee2Button" to="." method="_on_coffee_2_button_pressed"]
+[connection signal="body_entered" from="Node2D/Areas/Trash" to="." method="_on_trash_body_entered"]
+[connection signal="body_exited" from="Node2D/Areas/Trash" to="." method="_on_trash_body_exited"]
+[connection signal="body_entered" from="Node2D/Areas/Oven" to="." method="_on_oven_body_entered"]
+[connection signal="body_exited" from="Node2D/Areas/Oven" to="." method="_on_oven_body_exited"]
+[connection signal="timeout" from="Node2D/Areas/Oven/OvenTimer" to="." method="_on_oven_timer_timeout"]
+[connection signal="pressed" from="Node2D/Areas/Oven/DoneBox/DoneButton" to="." method="_on_done_button_pressed"]
+[connection signal="pressed" from="Node2D/Areas/Oven/OvenInterface/PastryBox/PastryButton" to="." method="_on_pastry_button_pressed"]
+[connection signal="pressed" from="Node2D/Areas/Oven/OvenInterface/SquareBox/SquareButton" to="." method="_on_square_button_pressed"]
+[connection signal="pressed" from="Node2D/Areas/Oven/OvenInterface/CroissantBox/CroissantButton" to="." method="_on_croissant_button_pressed"]
+[connection signal="pressed" from="Node2D/Areas/Oven/OvenInterface/PieBox/PieButton" to="." method="_on_pie_button_pressed"]
+[connection signal="pressed" from="Node2D/Areas/Oven/OvenInterface/TiramisuBox/TiramisuButton" to="." method="_on_tiramisu_button_pressed"]
 [connection signal="body_entered" from="Node2D/Areas/PlayerBoundary" to="." method="_on_player_boundary_body_entered"]
 [connection signal="body_exited" from="Node2D/Areas/PlayerBoundary" to="." method="_on_player_boundary_body_exited"]
 [connection signal="timeout" from="Node2D/CustomerSpawn/SpawnTimer" to="." method="_on_spawn_timer_timeout"]

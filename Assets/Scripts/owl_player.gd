@@ -5,12 +5,12 @@ extends CharacterBody2D
 @onready var timer = $DozeTimer
 @onready var stamina = $StaminaTimer
 @onready var action_prompt = $ActionPrompt2
-@onready var pie = $Pie
-@onready var square = $Square
-@onready var croissant = $Croissant
-@onready var tiramisu = $Tiramisu
-@onready var pastry = $Pastry
-@onready var coffee = $Coffee
+@onready var order_pie = $Pie
+@onready var order_square = $Square
+@onready var order_croissant = $Croissant
+@onready var order_tiramisu = $Tiramisu
+@onready var order_pastry = $Pastry
+@onready var order_coffee = $Coffee
 @onready var cash = $Cash
 @onready var bill = $Bill
 
@@ -20,11 +20,47 @@ var stamina_full = false
 var sprinting = false
 var sitting = false
 var seating_customer: CharacterBody2D = null 
+var serving_customer: CharacterBody2D = null 
 var chair = null
 var near_chair = false
 var item_holding = null
+var item_holding_sprite = null
 
 func owl_player():
+	pass
+	
+func take_item(item):
+	print("Receiving " + str(item))
+	if item_holding == null:
+		if item == "coffee":
+			order_coffee.visible = true
+			item_holding_sprite = order_coffee
+		if item == "croissant":
+			order_croissant.visible = true
+			item_holding_sprite = order_croissant
+		if item == "pastry":
+			order_pastry.visible = true
+			item_holding_sprite = order_pastry
+		if item == "square":
+			order_square.visible = true
+			item_holding_sprite = order_square
+		if item == "pie":
+			order_pie.visible = true
+			item_holding_sprite = order_pie
+		if item == "tiramisu":
+			order_tiramisu.visible = true
+			item_holding_sprite = order_tiramisu
+		item_holding = item
+	
+func holding_item():
+	return item_holding
+	
+func clear_item():
+	item_holding_sprite.visible = false
+	item_holding_sprite = null
+	item_holding = null
+	
+func serve_item(item_holding):
 	pass
 	
 func has_customer():
@@ -42,6 +78,9 @@ func _ready():
 	timer.start()
 
 func _physics_process(delta):
+	# if item_holding != null:
+#	if item_holding != null:
+#	print("Player is holding " + str(item_holding))
 	
 	if Input.is_action_pressed("sprint"):
 		SPEED = 160
@@ -104,6 +143,11 @@ func _physics_process(delta):
 					if seating_customer.return_state() == 2:
 						seating_customer.get_seated(chair)
 						chair = null
+	if serving_customer != null and item_holding != null:
+		action_prompt.visible = true
+		action_prompt.text = "Serve"
+		if Input.is_action_just_pressed("action"):
+			serving_customer.receive_order(item_holding)
 	else:
 		action_prompt.visible = false
 	
@@ -123,7 +167,12 @@ func _on_area_2d_area_exited(area):
 		near_chair = false
 
 func _on_area_2d_body_entered(body):
-	pass
+	if body.has_method("owl_customer"):
+		if body.return_state() == 4 or body.return_state() == 6 or body.return_state() == 8:
+			#body.receive_order(item_holding)
+			serving_customer = body
 
 func _on_area_2d_body_exited(body):
-	pass
+	if body.has_method("owl_customer"):
+		if body.return_state() == 4 or body.return_state() == 6 or body.return_state() == 8:
+			serving_customer = null
