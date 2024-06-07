@@ -22,7 +22,7 @@ var sitting = false
 var seating_customer: CharacterBody2D = null 
 var chair = null
 var near_chair = false
-var food_visible = false
+var item_holding = null
 
 func owl_player():
 	pass
@@ -32,7 +32,7 @@ func has_customer():
 	
 func seat_customer(customer): 
 	seating_customer = customer
-	print(customer)
+	# print(customer)
 	
 func clear_customer():
 	seating_customer = null

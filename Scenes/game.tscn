@@ -911,8 +911,22 @@ theme_override_fonts/font = ExtResource("9_elom8")
 theme_override_font_sizes/font_size = 8
 text = "Press Esc Again To Quit"
 
+[node name="Score" type="Label" parent="."]
+offset_left = 272.0
+offset_top = 81.0
+offset_right = 430.0
+offset_bottom = 91.0
+scale = Vector2(0.8, 0.8)
+theme_override_fonts/font = ExtResource("9_elom8")
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 2
+autowrap_mode = 2
+
 [node name="EscTimer" type="Timer" parent="."]
 wait_time = 3.0
+
+[node name="GameTimer" type="Timer" parent="."]
+wait_time = 300.0
 
 [connection signal="body_entered" from="Node2D/Areas/Exit" to="." method="_on_exit_body_entered"]
 [connection signal="body_exited" from="Node2D/Areas/Exit" to="." method="_on_exit_body_exited"]
@@ -920,3 +934,4 @@ wait_time = 3.0
 [connection signal="body_exited" from="Node2D/Areas/PlayerBoundary" to="." method="_on_player_boundary_body_exited"]
 [connection signal="timeout" from="Node2D/CustomerSpawn/SpawnTimer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="timeout" from="EscTimer" to="." method="_on_esc_timer_timeout"]
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]

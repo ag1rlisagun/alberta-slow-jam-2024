@@ -33,6 +33,9 @@ extends Node2D
 # and the money u made on top of the $50 is ur score!
 
 
+# IF NO CASH IN HAND THEN CASH REGISTER GIVES CHECK 
+# (AND IF THERE ARE CUSTOMERS IN THE SCENE)
+
 
 
 
@@ -78,7 +81,15 @@ extends Node2D
 @onready var escape_text = $EscapeText
 @onready var esc_timer = $EscTimer
 
+@onready var score_label = $Score
+
+@onready var game_timer = $GameTimer
+
 var escaping = false
+var score = 45
+var game_over = false
+var game_won = false
+var game_updated = false
 
 
 func spawn():
@@ -86,28 +97,51 @@ func spawn():
 	var customer = cust_scene.instantiate()
 	add_child(customer)
 	customer.position = spawn_area.position
-	print(str(customer) + "@ " + str(customer.position))
+	# print(str(customer) + " @ " + str(customer.position))
 	customer.entrance = $Node2D/Areas/Entrance
 	customer.player = $Node2D/Player
 	customer.exit = $Node2D/Areas/Exit
 	spawn_timer.start()
+	
+func update_score(customer_score):
+	score = score + customer_score
+	print("Score: " + str(score))
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	spawn_timer.set_wait_time(5.0)
 	spawn_timer.start()
+	score_label.text = "Money: $" + str(score)
+	game_timer.start()
+	print("Score: " + str(score))
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	score_label.text = "Money: $" + str(score)
+	
 	if Input.is_action_just_pressed("esc"):
 		if escaping:
 			get_tree().change_scene_to_file("res://Scenes/Menus/start_menu.tscn")
 		else:
 			handle_escape()
+			
+	if score <= 0:
+		game_over = true
+		game_timer.stop()
 		
-
+	if game_over and !game_updated: 
+	# stop processes and show something different (plus save score if won)
+		if game_won: 
+			print("You survived the shift!")
+		else:
+			print("You lost...")
+		game_updated = true
+		
 func _on_exit_body_entered(body):
 	if body.has_method("owl_customer"):
+		var cust_bill = body.return_bill()
+		update_score(cust_bill)
 		body.queue_free()
 
 func _on_exit_body_exited(body):
@@ -126,7 +160,6 @@ func _on_esc_timer_timeout():
 	escaping = false
 	escape_text.visible = false
 
-
 func _on_player_boundary_body_entered(body):
 	if body.has_method("owl_player"):
 		player_bound_collision.set_deferred("disabled", false)
@@ -138,3 +171,8 @@ func _on_player_boundary_body_exited(body):
 		player_bound_collision.set_deferred("disabled", true)
 	else:
 		player_bound_collision.set_deferred("disabled", true)
+
+func _on_game_timer_timeout():
+	game_over = true
+	game_won = true
+	

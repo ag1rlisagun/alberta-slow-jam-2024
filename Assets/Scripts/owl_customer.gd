@@ -55,6 +55,8 @@ enum {
 @onready var rng = RandomNumberGenerator.new()
 @onready var current_state = ENTER
 
+@onready var score_updated = false
+
 @onready var animate = $AnimatedSprite2D
 @onready var wait_45 = $FourFiveWait
 @onready var wait_60 = $SixtyWait
@@ -89,7 +91,6 @@ var chair = null
 var getting_seated = false
 var bill = 0
 var bill_paid = false
-var food_visible = false
 var current_food = null
 
 func owl_customer():
@@ -102,9 +103,34 @@ func follow_player(leader):
 	# method to follow player
 	current_state = BEING_SEATED
 	
+func receive_order(item): 
+	# player calls this with an item in their hand 
+	# responds depending on the item
+	if current_state == DRINK_WAITING:
+		if item != order_coffee:
+			wait_45.stop()
+			current_state = DONE
+		else:
+			wait_45.stop()
+			current_state = DRINK_CONSUMING
+	if current_state == FOOD_WAITING:
+		if item != current_food:
+			wait_60.stop()
+			current_state = DONE
+		else:
+			wait_60.stop()
+			current_state = FOOD_CONSUMING
+	if current_state == BILL_WAITING:
+		if item != "bill":
+			bill_paid = false
+		else:
+			bill_paid = true
+		wait_45.stop()
+		current_state = DONE
+			
 func get_seated(seat):
 	chair = seat
-	print(chair)
+	# print(chair)
 	getting_seated = true
 	
 func choose_food(): # need to make a function to show the right food sprite
@@ -121,9 +147,40 @@ func hide_order(food_string):
 	order_bg.visible = false
 	food_string.visible = false
 	
+func hold_item(item):
+	if item == order_croissant:
+		croissant.visible = true
+	if item == order_tiramisu:
+		tiramisu.visible = true
+	if item == order_square:
+		square.visible = true
+	if item == order_pastry:
+		pastry.visible = true
+	if item == order_pie:
+		pie.visible = true
+	else:
+		item.visible = true
+	
+func hide_item(item):
+	if item == order_croissant:
+		croissant.visible = false
+	if item == order_tiramisu:
+		tiramisu.visible = false
+	if item == order_square:
+		square.visible = false
+	if item == order_pastry:
+		pastry.visible = false
+	if item == order_pie:
+		pie.visible = false
+	else:
+		item.visible = false
+		
+func return_bill():
+	return bill
 	
 func _ready():
 	animate.set_modulate(Color(rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), 1))
+	# print("Score Updated: " + str(score_updated))
 	
 func _process(delta):
 	match current_state:
@@ -163,6 +220,9 @@ func _process(delta):
 				print("drink waiting, 45 sec timer START")
 		DRINK_CONSUMING:
 		# 10-20 secs drinking
+			hide_order(order_coffee)
+			hold_item(coffee)
+			bill = 4
 			if idle_20.is_stopped():
 				idle_20.start()
 				print("drink consuming, 0 sec timer START")
@@ -171,7 +231,7 @@ func _process(delta):
 		# displays desired food and waits 1min at most
 		# need a function for a new timer, and to trigger DONE state if finished 
 		# also to take away points for unpaid coffee
-			hide_order(order_coffee)
+			hide_item(coffee)
 			current_food = choose_food()
 			order(current_food)
 			if wait_60.is_stopped():
@@ -179,24 +239,35 @@ func _process(delta):
 				print("food waiting, 0 sec timer START")
 		FOOD_CONSUMING:
 		# 30secs eating
+			bill = 9
 			hide_order(current_food)
+			hold_item(current_food)
 			if idle_30.is_stopped():
 				idle_30.start()
 				print("food consuming, 30 sec timer START")
 		BILL_WAITING:
 		# food disappears and customer will wait 45 secs at most
+			hide_item(current_food)
 			order(order_bill)
+			hold_item(cash)
 			if wait_45.is_stopped():
 				wait_45.start()
 				print("bill waiting, 45 sec timer START")
 		DONE:
 		# as soon as bill is brought, customer pays and walks out of cafe
 		# player gets points for the bill and tips
-			hide_order(order_coffee)
 			if current_food != null:
 				hide_order(current_food)
+			hide_order(order_coffee)
 			hide_order(order_bill)
-			sitting = false
+			hide_item(cash)
+			if bill_paid:
+				bill += rng.randi_range(0, 10)
+			if !bill_paid:
+				# Testing
+				# bill = -bill
+				bill = -15
+				
 			nav.set_target_position(exit.position)
 			var move_direction = position.direction_to(nav.get_next_path_position())
 			velocity = move_direction * SPEED
@@ -204,19 +275,20 @@ func _process(delta):
 			move_and_slide()
 
 	if player_near:
-		if player.has_customer() == null and current_state == SEAT_WAITING:
-			customer_text.visible = true
-			customer_text.text = "Interact"
-			if Input.is_action_just_pressed("action"):
-				follow_player(player)
-				wait_45.stop()
-				current_state = BEING_SEATED
-				print("45 sec timer STOPPED")
-				player.seat_customer(self)
+		if player.has_customer() == null: 
+			if current_state == SEAT_WAITING:
+				customer_text.visible = true
+				customer_text.text = "Interact"
+				if Input.is_action_just_pressed("action"):
+					follow_player(player)
+					wait_45.stop()
+					current_state = BEING_SEATED
+					print("45 sec timer STOPPED")
+					player.seat_customer(self)
 	else:
 		customer_text.visible = false
 	
-	test_text.text = state_list[current_state]
+	# test_text.text = state_list[current_state]
 	
 	if self.velocity == Vector2(0,0) or sitting or current_state == SEAT_WAITING:
 		if sitting:
@@ -231,7 +303,7 @@ func _process(delta):
 			animate.flip_h = false
 		
 	if current_state == BEING_SEATED and !getting_seated and !sitting and chair == null:
-		print("nav.set_target_position(player.position)")
+		# print("nav.set_target_position(player.position)")
 		nav.set_target_position(player.position)
 		if nav.distance_to_target() > 45:
 			var move_direction = position.direction_to(nav.get_next_path_position())
@@ -240,7 +312,7 @@ func _process(delta):
 			move_and_slide()
 		
 	if getting_seated and !sitting and chair != null:
-		print("nav.set_target_position(chair.position)")
+		# print("nav.set_target_position(chair.position)")
 		nav.set_target_position(chair.position)
 		var move_direction = position.direction_to(nav.get_next_path_position())
 		velocity = move_direction * SPEED
@@ -256,7 +328,7 @@ func _on_area_2d_area_entered(area):
 					position.y = area.position.y
 					sitting = true
 					getting_seated = false
-					print("Sitting = " + str(sitting))
+					# print("Sitting = " + str(sitting))
 					player.clear_customer()
 					wait_45.stop()
 					current_state = SITTING
@@ -265,7 +337,7 @@ func _on_area_2d_area_exited(area):
 	if current_state == DONE:
 		if area.has_method("seat"):
 			sitting = false
-			print("Sitting = " + str(sitting))
+			# print("Sitting = " + str(sitting))
 
 func _on_detect_area_body_entered(body):
 	if body.has_method("owl_player"):
