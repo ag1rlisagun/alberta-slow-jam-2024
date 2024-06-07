@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ciqkikx7a5647"]
 
-[ext_resource type="Script" path="res://Scenes/Menus/tutorial.gd" id="1_04qu4"]
+[ext_resource type="Script" path="res://Assets/Scripts/tutorial.gd" id="1_5rg0v"]
 [ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="2_rkwwp"]
 
 [node name="Tutorial" type="Control"]
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_04qu4")
+script = ExtResource("1_5rg0v")
 
 [node name="EscapeText" type="Label" parent="."]
 visible = false

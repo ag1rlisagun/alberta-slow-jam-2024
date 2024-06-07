@@ -36,10 +36,45 @@ extends Node2D
 
 
 
+@onready var rng = RandomNumberGenerator.new()
+
+@onready var player_boundary = $Node2D/Areas/PlayerBoundary
+@onready var player_bound_collision = $Node2D/Areas/PlayerBoundary/StaticBody2D/CollisionShape2D2
+
+@onready var trash = $Node2D/Areas/Trash
+
+@onready var fir_coffee_mac = $Node2D/Areas/FirCoffeeMac
+@onready var coffee_box = $Node2D/Areas/FirCoffeeMac/CoffeeBox
+@onready var order_coffee = $Node2D/Areas/FirCoffeeMac/CoffeeBox/OrderCoffee
+
+@onready var sec_coffee_mac = $Node2D/Areas/SecCoffeeMac
+@onready var coffee_box_2 = $Node2D/Areas/SecCoffeeMac/CoffeeBox2
+@onready var order_coffee_2 = $Node2D/Areas/SecCoffeeMac/CoffeeBox2/OrderCoffee2
+
+@onready var oven = $Node2D/Areas/Oven
+@onready var pastry_box = $Node2D/Areas/Oven/PastryBox
+@onready var order_pastry = $Node2D/Areas/Oven/PastryBox/OrderPastry
+@onready var square_box = $Node2D/Areas/Oven/SquareBox
+@onready var order_square = $Node2D/Areas/Oven/SquareBox/OrderSquare
+@onready var croissant_box = $Node2D/Areas/Oven/CroissantBox
+@onready var order_croissant = $Node2D/Areas/Oven/CroissantBox/OrderCroissant
+@onready var pie_box = $Node2D/Areas/Oven/PieBox
+@onready var order_pie = $Node2D/Areas/Oven/PieBox/OrderPie
+@onready var tiramisu_box = $Node2D/Areas/Oven/TiramisuBox
+@onready var order_tiramisu = $Node2D/Areas/Oven/TiramisuBox/OrderTiramisu
+@onready var done_box = $Node2D/Areas/Oven/DoneBox
+@onready var done_tiramisu = $Node2D/Areas/Oven/DoneBox/DoneTiramisu
+@onready var done_square = $Node2D/Areas/Oven/DoneBox/DoneSquare
+@onready var done_croissant = $Node2D/Areas/Oven/DoneBox/DoneCroissant
+@onready var done_pie = $Node2D/Areas/Oven/DoneBox/DonePie
+@onready var done_pastry = $Node2D/Areas/Oven/DoneBox/DonePastry
+
+@onready var cash_register = $Node2D/Areas/CashRegister
+@onready var cash_prompt = $Node2D/Areas/CashRegister/CashPrompt
 
 @onready var spawn_area = $Node2D/CustomerSpawn
 @onready var spawn_timer = $Node2D/CustomerSpawn/SpawnTimer
-@onready var rng = RandomNumberGenerator.new()
+
 @onready var escape_text = $EscapeText
 @onready var esc_timer = $EscTimer
 
@@ -90,3 +125,16 @@ func handle_escape():
 func _on_esc_timer_timeout():
 	escaping = false
 	escape_text.visible = false
+
+
+func _on_player_boundary_body_entered(body):
+	if body.has_method("owl_player"):
+		player_bound_collision.set_deferred("disabled", false)
+	else:
+		player_bound_collision.set_deferred("disabled", true)
+
+func _on_player_boundary_body_exited(body):
+	if body.has_method("owl_player"):
+		player_bound_collision.set_deferred("disabled", true)
+	else:
+		player_bound_collision.set_deferred("disabled", true)

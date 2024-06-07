@@ -1,13 +1,15 @@
-[gd_scene load_steps=23 format=3 uid="uid://trlps5kwfcke"]
+[gd_scene load_steps=27 format=3 uid="uid://trlps5kwfcke"]
 
 [ext_resource type="Script" path="res://Assets/Scripts/start_menu.gd" id="1_aqjxl"]
-[ext_resource type="AudioStream" uid="uid://bjt2urdxgxfsf" path="res://Assets/Music/cafe_bass_jazz.mp3" id="1_himei"]
 [ext_resource type="Texture2D" uid="uid://da8w5skeh0wdw" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-tilemap.png" id="1_qarei"]
 [ext_resource type="Texture2D" uid="uid://b8ssj24fromfm" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-furnitures.png" id="2_4oq77"]
+[ext_resource type="AudioStream" uid="uid://nlckhsxia0ae" path="res://Assets/Music/cafe_rou_title.wav" id="2_m01fa"]
 [ext_resource type="Texture2D" uid="uid://f2grvism4a2u" path="res://Assets/Neko Cafe Asset Pack/neko-cafe-food.png" id="3_7nh3m"]
 [ext_resource type="Texture2D" uid="uid://cwpnfi438tfqb" path="res://Assets/Characters/simpleBird-Sheet.png" id="4_1ln6d"]
 [ext_resource type="FontFile" uid="uid://bw1bscnrnjag2" path="res://Assets/Fonts/dogica/TTF/dogicabold.ttf" id="6_dbh23"]
-[ext_resource type="Texture2D" uid="uid://dxf27tq7j63l6" path="res://Assets/Items/trash_can.png" id="6_narnm"]
+[ext_resource type="Texture2D" uid="uid://c84u3dgx3h7a4" path="res://Assets/Items/trash_can.png" id="6_narnm"]
+[ext_resource type="Texture2D" uid="uid://yxoqjw1gdbxc" path="res://Assets/Items/cash_register.png" id="7_7o4sq"]
+[ext_resource type="Texture2D" uid="uid://bj7pmcn24ajuk" path="res://Assets/Items/tip_jar.png" id="8_04wjx"]
 [ext_resource type="FontFile" uid="uid://bmmovi4yp2hap" path="res://Assets/Fonts/dogica/TTF/dogica.ttf" id="8_txodg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_pvp5e"]
@@ -143,15 +145,32 @@ texture = ExtResource("3_7nh3m")
 2:1/0 = 0
 2:1/0/y_sort_origin = 10
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ufp3b"]
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fb72y"]
+texture = ExtResource("7_7o4sq")
+0:0/0 = 0
+0:0/0/y_sort_origin = 10
+0:1/0 = 0
+0:1/0/y_sort_origin = 10
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xhl2e"]
+texture = ExtResource("8_04wjx")
+0:0/0 = 0
+0:0/0/y_sort_origin = 10
+0:1/0 = 0
+0:1/0/y_sort_origin = 10
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_yqb3q"]
 texture = ExtResource("6_narnm")
 0:0/0 = 0
+0:0/0/y_sort_origin = 10
 
 [sub_resource type="TileSet" id="TileSet_8skpn"]
 sources/0 = SubResource("TileSetAtlasSource_pvp5e")
 sources/1 = SubResource("TileSetAtlasSource_j1i8s")
 sources/2 = SubResource("TileSetAtlasSource_pb1jh")
-sources/3 = SubResource("TileSetAtlasSource_ufp3b")
+sources/4 = SubResource("TileSetAtlasSource_fb72y")
+sources/5 = SubResource("TileSetAtlasSource_xhl2e")
+sources/6 = SubResource("TileSetAtlasSource_yqb3q")
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_trv43"]
 atlas = ExtResource("4_1ln6d")
@@ -193,8 +212,8 @@ offset_bottom = 40.0
 script = ExtResource("1_aqjxl")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("1_himei")
-volume_db = -10.0
+stream = ExtResource("2_m01fa")
+volume_db = -15.0
 autoplay = true
 
 [node name="Node2D" type="Node2D" parent="."]
@@ -220,7 +239,7 @@ layer_2/modulate = Color(1, 1, 1, 1)
 layer_2/y_sort_enabled = true
 layer_2/y_sort_origin = 0
 layer_2/z_index = 0
-layer_2/tile_data = PackedInt32Array(327682, 524289, 4, 327683, 524289, 4, 589825, 65538, 1, 589824, 2, 1, 589834, 65538, 0, 720905, 327681, 4, 720903, 327681, 4, 720902, 327681, 4, 720900, 327681, 4, 720898, 327681, 4, 720909, 327681, 5, 786445, 327681, 5, 720912, 327681, 5, 786448, 327681, 5, 262157, 589825, 1, 262158, 655361, 1, 327693, 589825, 2, 327694, 655361, 2, 393226, 3, 0)
+layer_2/tile_data = PackedInt32Array(327682, 524289, 4, 327683, 524289, 4, 589825, 65538, 1, 589824, 2, 1, 589834, 65538, 0, 720905, 327681, 4, 720903, 327681, 4, 720902, 327681, 4, 720900, 327681, 4, 720898, 327681, 4, 720909, 327681, 5, 786445, 327681, 5, 720912, 327681, 5, 786448, 327681, 5, 262157, 589825, 1, 262158, 655361, 1, 327693, 589825, 2, 327694, 655361, 2, 589828, 5, 0, 655364, 5, 1, 589827, 4, 0, 655363, 4, 1, 393226, 6, 0)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Node2D"]
 y_sort_enabled = true

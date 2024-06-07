@@ -24,9 +24,6 @@ var chair = null
 var near_chair = false
 var food_visible = false
 
-# WILL NEED TO IMPLEMENT COFFEE MACHINE AND OVEN WITH TIMERS FOR FOOD
-# NEED CASH REGISTER OR SOMETHING FOR BILLS (AND BILL SPRITE)
-
 func owl_player():
 	pass
 	
@@ -102,13 +99,14 @@ func _physics_process(delta):
 		if chair.return_empty():
 			if seating_customer != null:
 				action_prompt.visible = true
-				action_prompt.text = "Seat Customer"
+				action_prompt.text = "Seat"
 				if Input.is_action_just_pressed("action"):
 					if seating_customer.return_state() == 2:
 						seating_customer.get_seated(chair)
 						chair = null
 	else:
 		action_prompt.visible = false
+	
 	move_and_slide()
 
 func _on_timer_timeout():
@@ -118,10 +116,6 @@ func _on_area_2d_area_entered(area): # for seating customers
 	if area.has_method("seat"):
 		chair = area
 		near_chair = true
-		# print(chair)
-		# do something to pass the chair location to customer 
-		# do something with chair.position
-		# interact with chair and send signal to specific customer??
 
 func _on_area_2d_area_exited(area): 
 	if area.has_method("seat"):
@@ -129,8 +123,6 @@ func _on_area_2d_area_exited(area):
 		near_chair = false
 
 func _on_area_2d_body_entered(body):
-	# gonna use the detection methods on objects (customer, seats, etc.)
-	# rather than the ones on the player unless i need to
 	pass
 
 func _on_area_2d_body_exited(body):

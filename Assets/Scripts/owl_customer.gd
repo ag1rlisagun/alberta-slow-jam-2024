@@ -33,8 +33,6 @@ extends CharacterBody2D
 
 # player also shouldnt be able to leave area
 
-# NEED GAME STATES!!!!!!!!!!!!!!!!!!!!!!! BRUH GAME NEEDS TO END
-# REMAKE NAVREGION LATER TO HAVE MORE SQUARES SO NAVIGATION ISNT JANKY
 
 
 enum {
@@ -85,13 +83,14 @@ const SPEED = 75
 
 var player_near = false
 var sitting = false
-var food_list = ["coffee", "croissant", "pie", "pastry", "square"]
+var food_list = [order_coffee, order_croissant, order_pie, order_pastry, order_square]
 var state_list = ["ENTER", "SEAT_WAITING", "BEING_SEATED", "SITTING", "DRINK_WAITING", "DRINK_CONSUMING", "FOOD_WAITING", "FOOD_CONSUMING", "BILL_WAITING", "DONE"]
 var chair = null
 var getting_seated = false
 var bill = 0
 var bill_paid = false
 var food_visible = false
+var current_food = null
 
 func owl_customer():
 	pass
@@ -115,7 +114,13 @@ func choose_food(): # need to make a function to show the right food sprite
 func order(food_string): 
 # function to order any food, all the processes to show the food sprite, and the timer
 # need to make separate the food/coffee sprites in the sheet
-	pass
+	order_bg.visible = true
+	food_string.visible = true
+	
+func hide_order(food_string):
+	order_bg.visible = false
+	food_string.visible = false
+	
 	
 func _ready():
 	animate.set_modulate(Color(rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), rng.randf_range(0.3, 1.0), 1))
@@ -152,7 +157,7 @@ func _process(delta):
 		DRINK_WAITING:
 		# (coffee) displays desired drink and waits at most 45 secs
 		# need a function for a new timer, and to trigger DONE state if finished 
-			order(coffee)
+			order(order_coffee)
 			if wait_45.is_stopped():
 				wait_45.start()
 				print("drink waiting, 45 sec timer START")
@@ -166,23 +171,31 @@ func _process(delta):
 		# displays desired food and waits 1min at most
 		# need a function for a new timer, and to trigger DONE state if finished 
 		# also to take away points for unpaid coffee
-			order(choose_food())
+			hide_order(order_coffee)
+			current_food = choose_food()
+			order(current_food)
 			if wait_60.is_stopped():
 				wait_60.start()
 				print("food waiting, 0 sec timer START")
 		FOOD_CONSUMING:
 		# 30secs eating
+			hide_order(current_food)
 			if idle_30.is_stopped():
 				idle_30.start()
 				print("food consuming, 30 sec timer START")
 		BILL_WAITING:
 		# food disappears and customer will wait 45 secs at most
+			order(order_bill)
 			if wait_45.is_stopped():
 				wait_45.start()
 				print("bill waiting, 45 sec timer START")
 		DONE:
 		# as soon as bill is brought, customer pays and walks out of cafe
 		# player gets points for the bill and tips
+			hide_order(order_coffee)
+			if current_food != null:
+				hide_order(current_food)
+			hide_order(order_bill)
 			sitting = false
 			nav.set_target_position(exit.position)
 			var move_direction = position.direction_to(nav.get_next_path_position())
